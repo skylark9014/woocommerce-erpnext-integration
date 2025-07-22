@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  integration:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: woocommerce-erpnext-integration
+
+    working_dir: /code
+    volumes:
+      - ./:/code
+
+    env_file:
+      - .env
+    environment:
+      HTTPX_LOG_LEVEL: "WARNING"
+      DEFAULT_MODE_OF_PAYMENT: Cash
+      ERP_API_KEY: 9cac7b3b1b755d6
+      ERP_API_SECRET: 70916226549f363
+      ERP_COMPANY: Techniclad
+      ERP_CURRENCY: ZAR
+      ERP_DEFAULT_WAREHOUSE: Stores - TC
+      ERP_URL: https://records.techniclad.co.za
+      MAPPING_JSON_FILE: /tmp/product_mapping.json
+      PAYMENT_METHOD_MAP_JSON: '{"cod":"Cash","bacs":"Bank Transfer","paypal":"PayPal","cheque":"Cheque","stripe":"Credit Card"}'
+      STATIC_DIR: /code/app/static
+      TEMPLATES_DIR: /code/app/templates
+      WC_API_KEY: ck_b4a1f4b2007763c748aec3cc686a144a2db876d4
+      WC_API_SECRET: cs_6a099060d397078c00a5d26500dd891f4532b827
+      WC_BASE_URL: https://76b81af8b29b.ngrok-free.app
+      WC_BASIC_PASS: '@Axxess1968'
+      WC_BASIC_USER: access
+      WP_API_URL: https://76b81af8b29b.ngrok-free.app/wp-json
+      WP_APP_PASSWORD: Arrmll5cCxaf3YXlWuM30trr
+      WP_USERNAME: techniclad
+
+    command: ["uvicorn", "app.main_app:app", "--host", "0.0.0.0", "--port", "8000"]
+
+    ports:
+      - "8000:8000"
+
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.admin.rule=Host(`records.techniclad.co.za`) && PathPrefix(`/admin`)"
+      - "traefik.http.routers.admin.entrypoints=websecure"
+      - "traefik.http.routers.admin.tls.certresolver=main-resolver"
+
+    networks:
+      - frappe_default
+    restart: unless-stopped
+
+networks:
+  frappe_default:
+    external: true
+

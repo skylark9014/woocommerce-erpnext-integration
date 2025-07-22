@@ -1,0 +1,7 @@
+{
+  // Point Pylance (and the Python extension) at your `app/` folder
+  "python.analysis.extraPaths": ["./app"],
+
+  // If you have a .venv in your workspace, uncomment:
+  // "python.pythonPath": "${workspaceFolder}/.venv/bin/python"
+}
