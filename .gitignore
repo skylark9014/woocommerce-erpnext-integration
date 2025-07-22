@@ -1,0 +1,12 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.env
+.env.*
+# IDE
+.vscode/
+# Docker/compose leftovers
+*.log
+# Local backups
+.git_old_backup/
