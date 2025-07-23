@@ -5,9 +5,8 @@
 import logging
 from datetime import datetime
 from pathlib import Path
-from typing import Tuple
 
-from fastapi import APIRouter, Request, HTTPException, Query
+from fastapi import APIRouter, Request, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
@@ -19,31 +18,29 @@ from app.sync.product_mapper import (
     map_erp_to_wc_product,
 )
 from app.erp.erp_fetch import (
-    get_erpnext_items,
     get_price_from_pricelist,
+    get_erpnext_items,
     get_default_pricelist,
 )
 from app.woocommerce.wc_fetch import get_wc_products
 from app.woocommerce.woocommerce_api import wc_create, wc_update, wc_delete
 from app.utils.compare import needs_update
-from app.config import MAPPING_JSON_FILE
 from app.sync.product_sync import sync_products
+from app.config import MAPPING_JSON_FILE
 
 logger = logging.getLogger("uvicorn.error")
+admin_router = APIRouter()
 
-# Router with a prefix so every path is under /admin
-admin_router = APIRouter(prefix="/admin", tags=["admin"])
-
-# Templates dir: app/templates
+# Templates live in app/templates
 BASE_DIR = Path(__file__).resolve().parent
-templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
-# Static is mounted once in main_app.py -> do NOT mount here
-
+TEMPLATE_DIR = BASE_DIR / "templates"
+templates = Jinja2Templates(directory=str(TEMPLATE_DIR))
+# NOTE: Static is mounted globally in main_app.py at /static
 
 # -----------------------------
 # ✅ Admin UI Page
 # -----------------------------
-@admin_router.get("/", response_class=HTMLResponse, include_in_schema=False)
+@admin_router.get("/", response_class=HTMLResponse)
 async def admin_page(request: Request):
     return templates.TemplateResponse("mapping.html", {"request": request})
 
@@ -54,18 +51,17 @@ async def admin_page(request: Request):
 @admin_router.post("/api/preview-sync")
 async def preview_sync_handler():
     try:
-        return await generate_sync_preview()
+        result = await generate_sync_preview()
+        return result
     except Exception as e:
         logger.exception("Preview sync failed")
         return {"status": "error", "error": str(e)}
 
 
-# -----------------------------
-# ✅ Mapping CRUD
-# -----------------------------
 @admin_router.get("/api/mapping")
 def get_mapping():
-    return load_mapping_raw(MAPPING_JSON_FILE) or {"auto": [], "overrides": []}
+    data = load_mapping_raw(MAPPING_JSON_FILE) or {"auto": [], "overrides": []}
+    return data
 
 
 @admin_router.put("/api/mapping")
@@ -82,7 +78,7 @@ async def save_mapping_handler(payload: dict):
 # -----------------------------
 # ✅ Utility: Get fresh ERP/WC + mapping
 # -----------------------------
-def get_fresh_data() -> Tuple[dict, dict, list, list]:
+def get_fresh_data():
     erp_items = get_erpnext_items()
     wc_products = get_wc_products()
     auto_rows, overrides = build_or_load_mapping(MAPPING_JSON_FILE, wc_products, erp_items)
@@ -109,6 +105,7 @@ async def bulk_sync_action(action: str):
 
 @admin_router.post("/api/sync/create")
 async def bulk_create():
+    pricelist = await get_default_pricelist()
     erp_index, wc_index, auto_rows, overrides = get_fresh_data()
     created, failed = [], []
 
@@ -116,10 +113,12 @@ async def bulk_create():
         code = row["erp_item_code"]
         if row.get("wc_product_id") or code in wc_index:
             continue
-        price = await get_price_from_pricelist(None, code, "Standard Selling")
+
+        price = await get_price_from_pricelist(None, code, pricelist)
         if price is None:
             failed.append(code)
             continue
+
         try:
             payload = map_erp_to_wc_product(erp_index[code], price)
             wc_p = wc_create("products", payload)
@@ -133,7 +132,7 @@ async def bulk_create():
                 }
             )
             created.append(code)
-        except Exception as e:
+        except Exception as e:  # noqa
             logger.error(f"[Create] {code} failed: {e}")
             failed.append(code)
 
@@ -143,6 +142,7 @@ async def bulk_create():
 
 @admin_router.post("/api/sync/update")
 async def bulk_update():
+    pricelist = await get_default_pricelist()
     erp_index, wc_index, auto_rows, overrides = get_fresh_data()
     updated, failed = [], []
 
@@ -152,7 +152,7 @@ async def bulk_update():
         if not wc_p:
             continue
 
-        price = await get_price_from_pricelist(None, code, "Standard Selling")
+        price = await get_price_from_pricelist(None, code, pricelist)
         if price is None:
             failed.append(code)
             continue
@@ -170,7 +170,7 @@ async def bulk_update():
                     }
                 )
                 updated.append(code)
-            except Exception as e:
+            except Exception as e:  # noqa
                 logger.error(f"[Update] {code} failed: {e}")
                 failed.append(code)
 
@@ -189,18 +189,18 @@ async def bulk_delete():
             try:
                 wc_delete(f"products/{wc_p['id']}")
                 deleted.append(sku)
-            except Exception as e:
+            except Exception as e:  # noqa
                 logger.error(f"[Delete] {sku} failed: {e}")
                 failed.append(sku)
 
     return {"deleted": deleted, "failed": failed}
 
 
-# -----------------------------
-# ✅ Full sync endpoint
-# -----------------------------
+# =============================
+# 🔁 Full Sync (create+update+delete)
+# =============================
 @admin_router.post("/api/full-sync")
-async def full_sync_handler(pricelist: str | None = Query(None)):
-    if not pricelist:
-        pricelist = await get_default_pricelist()
+@admin_router.post("/api/resync")  # alias
+async def full_sync_handler():
+    pricelist = await get_default_pricelist()
     return await sync_products(pricelist=pricelist)

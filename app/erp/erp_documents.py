@@ -4,21 +4,18 @@
 # Delivery Notes, Invoices, and Payments in ERPNext
 # =============================
 
+import os
 import httpx
 from datetime import datetime
 import logging
 
-from app.erp.erp_fetch import get_or_create_customer_by_email
+ERP_URL = os.getenv("ERP_URL")          # <-- correct var name
+ERP_API_KEY = os.getenv("ERP_API_KEY")
+ERP_API_SECRET = os.getenv("ERP_API_SECRET")
 
-ERP_URL = "https://your-erp-url"
-ERP_API_KEY = "your_api_key"
-ERP_API_SECRET = "your_api_secret"
-
+HEADERS = {"Authorization": f"token {ERP_API_KEY}:{ERP_API_SECRET}"}
 logger = logging.getLogger("uvicorn.error")
 
-HEADERS = {
-    "Authorization": f"token {ERP_API_KEY}:{ERP_API_SECRET}"
-}
 
 # ======================================
 # ✅ Create Customer Payload
@@ -151,3 +148,28 @@ async def create_payment_entry(client: httpx.AsyncClient, invoice_name: str, mod
         logger.error(f"[ERP] Failed to create Payment Entry: {e}")
         raise
 
+def build_customer_payload(order_json: dict) -> dict:
+    b = order_json.get("billing", {})
+    name = f"{b.get('first_name','').strip()} {b.get('last_name','').strip()}".strip() or b.get("email")
+    return {
+        "doctype": "Customer",
+        "customer_name": name,
+        "customer_type": "Individual",
+        "email_id": b.get("email"),
+        "mobile_no": b.get("phone"),
+    }
+
+def build_sales_order_payload(order_json: dict, customer_name: str) -> dict:
+    lines = []
+    for l in order_json.get("line_items", []):
+        lines.append({
+            "item_code": l.get("sku") or l.get("name"),
+            "qty": l.get("quantity", 1),
+            "rate": float(l.get("price", 0)),
+        })
+    return {
+        "doctype": "Sales Order",
+        "customer": customer_name,
+        "transaction_date": datetime.utcnow().strftime("%Y-%m-%d"),
+        "items": lines,
+    }

@@ -1,47 +1,41 @@
 # =============================
 # ✅ Import and Load .env at startup
 # =============================
-
 import os
 from dotenv import load_dotenv
 load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), ".env"))
 
-from fastapi import FastAPI, APIRouter, Request
 import logging
-from app.sync.product_sync import sync_products
+from pathlib import Path
+from fastapi import FastAPI, Request
+from fastapi.staticfiles import StaticFiles
+
 from app.webhook_handler import handle_webhook
+from app.admin_routes import admin_router
+
+logger = logging.getLogger("uvicorn.error")
 
 # =============================
 # ✅ FastAPI App Initialization
 # =============================
-logger = logging.getLogger("uvicorn.error")
 app = FastAPI()
-admin_router = APIRouter()
 
+# ---- Static files (served from app/static) ----
+STATIC_DIR = Path(__file__).resolve().parent / "static"
+app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
-# ==================================
-# ✅ Expose Admin Endpoints for Sync
-# ==================================
-@admin_router.post("/api/resync")
-async def trigger_full_sync():
-    """
-    Temporary full sync trigger from Admin panel.
-    """
-    result = await sync_products()
-    if result.get("status") == "error":
-        return {"status": "error", **result}
-    return {"status": "success", **result}
+# ---- Admin router once, with prefix ----
+app.include_router(admin_router, prefix="/admin")
 
+@app.get("/")
+def root():
+    return {"status": "ok", "msg": "WooCommerce ↔ ERPNext integration running"}
 
 # ======================================
-# ✅ Webhook Handler for Woo → ERP Push
+# ✅ Webhook Handler (public endpoint)
 # ======================================
-@admin_router.post("/webhook")
+@app.post("/webhook")
 async def webhook_endpoint(request: Request):
-    """
-    Handles WooCommerce → ERPNext webhook payloads.
-    Validates and triggers Customer + Sales Order creation.
-    """
     payload = await request.json()
     try:
         result = await handle_webhook(payload)
@@ -49,16 +43,3 @@ async def webhook_endpoint(request: Request):
     except Exception as e:
         logger.exception("[Webhook] Failed to process payload")
         return {"status": "error", "error": str(e)}
-
-
-# =============================
-# ✅ Register Admin Routes
-# =============================
-def register_admin_routes(app: FastAPI):
-    app.include_router(admin_router, prefix="/admin")
-
-register_admin_routes(app)
-
-@app.get("/")
-def root():
-    return {"status": "ok", "message": "WooCommerce ↔ ERPNext integration running"}

@@ -1,146 +1,183 @@
+// ------------- helpers -------------
+const $ = (sel) => document.querySelector(sel);
+const $$ = (sel) => Array.from(document.querySelectorAll(sel));
 
-// =============================
-// mapping.js - Admin Panel Logic
-// =============================
+function esc(str) {
+  return String(str ?? "").replace(/[&<>"']/g, s =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[s])
+  );
+}
 
-document.addEventListener("DOMContentLoaded", () => {
-    const previewBtn = document.getElementById("preview-sync");
-    const createBtn = document.getElementById("sync-create");
-    const updateBtn = document.getElementById("sync-update");
-    const deleteBtn = document.getElementById("sync-delete");
-    const previewTable = document.getElementById("preview-table");
-    const statusDiv = document.getElementById("status-msg");
+function showAlert(kind, msg) {
+  const box = $("#sync-alert");
+  box.className = `alert alert-${kind}`;
+  box.textContent = msg;
+  box.classList.remove("d-none");
+  setTimeout(() => box.classList.add("d-none"), 5000);
+}
 
-    const previewBody = document.querySelector("#preview-table tbody");
+// ------------- state -------------
+let mappingData = { auto: [], overrides: [] };
+let previewData = { actions: { create: [], update: [], delete: [] }, counts: {} };
 
-    async function postJson(url) {
-        const res = await fetch(url, { method: "POST" });
-        if (!res.ok) throw new Error(await res.text());
-        return await res.json();
-    }
-
-    function showStatus(msg, type = "info") {
-        statusDiv.textContent = msg;
-        statusDiv.className = `alert alert-${type}`;
-        statusDiv.style.display = "block";
-        setTimeout(() => { statusDiv.style.display = "none"; }, 5000);
-    }
-
-    function renderPreview(data) {
-        previewBody.innerHTML = "";
-
-        const appendRows = (arr, label, className) => {
-            for (const code of arr) {
-                const row = document.createElement("tr");
-                row.innerHTML = `
-                    <td>${code}</td>
-                    <td>${label}</td>
-                `;
-                row.classList.add(className);
-                previewBody.appendChild(row);
-            }
-        };
-
-        appendRows(data.actions.create, "Create", "table-success");
-        appendRows(data.actions.update, "Update", "table-warning");
-        appendRows(data.actions.delete, "Delete", "table-danger");
-    }
-
-    previewBtn?.addEventListener("click", async () => {
-        try {
-            showStatus("Previewing changes...", "secondary");
-            const data = await postJson("/admin/api/preview-sync");
-            renderPreview(data);
-            showStatus(`Preview ready. Create: ${data.counts.create}, Update: ${data.counts.update}, Delete: ${data.counts.delete}`, "info");
-        } catch (e) {
-            showStatus("Failed to preview sync: " + e.message, "danger");
-        }
+// ------------- tooltip utils -------------
+function disposeTooltips() {
+  $$('[data-bs-toggle="tooltip"]').forEach(el => {
+    const inst = bootstrap.Tooltip.getInstance(el);
+    if (inst) inst.dispose();
+  });
+}
+function initTooltips() {
+  disposeTooltips();
+  $$('[data-bs-toggle="tooltip"]').forEach(el => {
+    new bootstrap.Tooltip(el, {
+      container: 'body',
+      trigger: 'hover focus',
+      delay: { show: 200, hide: 100 }
     });
+  });
+}
 
-    createBtn?.addEventListener("click", async () => {
-        try {
-            showStatus("Creating products...");
-            const res = await postJson("/api/sync/create");
-            showStatus("Created: " + res.created.length + ", Failed: " + res.failed.length, res.failed.length ? "warning" : "success");
-        } catch (e) {
-            showStatus("Create failed: " + e.message, "danger");
-        }
-    });
+// ------------- renderers -------------
+function renderMappingTables() {
+  const autoBody = $("#auto-body");
+  const ovBody = $("#overrides-body");
+  if (!autoBody || !ovBody) return;
 
-    updateBtn?.addEventListener("click", async () => {
-        try {
-            showStatus("Updating products...");
-            const res = await postJson("/api/sync/update");
-            showStatus("Updated: " + res.updated.length + ", Failed: " + res.failed.length, res.failed.length ? "warning" : "success");
-        } catch (e) {
-            showStatus("Update failed: " + e.message, "danger");
-        }
-    });
+  autoBody.innerHTML = mappingData.auto.map(r => {
+    const unmatched = !r.wc_product_id || (r.status && r.status !== 'matched');
+    return `
+      <tr class="${unmatched ? 'unmatched' : ''}">
+        <td class="td-sm code">${esc(r.erp_item_code)}</td>
+        <td class="td-sm sku">${esc(r.wc_sku)}</td>
+        <td class="td-sm">${esc(r.wc_product_id)}</td>
+        <td class="td-sm">${esc(r.status)}</td>
+        <td class="td-sm">${esc(r.last_synced)}</td>
+        <td class="td-sm">${esc(r.last_price)}</td>
+      </tr>
+    `;
+  }).join("");
 
-    deleteBtn?.addEventListener("click", async () => {
-        try {
-            showStatus("Deleting products...");
-            const res = await postJson("/api/sync/delete");
-            showStatus("Deleted: " + res.deleted.length + ", Failed: " + res.failed.length, res.failed.length ? "warning" : "success");
-        } catch (e) {
-            showStatus("Delete failed: " + e.message, "danger");
-        }
-    });
-});
+  ovBody.innerHTML = mappingData.overrides.map((r, idx) => `
+    <tr data-idx="${idx}">
+      <td class="td-sm">
+        <input type="text" class="form-control form-control-sm" value="${esc(r.erp_item_code)}">
+      </td>
+      <td class="td-sm">
+        <input type="number" class="form-control form-control-sm" value="${esc(r.forced_wc_product_id)}">
+      </td>
+      <td class="td-sm">
+        <input type="text" class="form-control form-control-sm" value="${esc(r.note || '')}">
+      </td>
+      <td class="td-sm text-right">
+        <button class="btn btn-sm btn-outline-danger"
+                onclick="removeOverrideRow(${idx})"
+                data-bs-toggle="tooltip"
+                title="Delete this override row">✖</button>
+      </td>
+    </tr>
+  `).join("");
 
+  initTooltips();
+}
 
-document.addEventListener("DOMContentLoaded", function () {
-  const previewTable = document.getElementById("preview-table");
-  const resultContainer = document.getElementById("result");
+function renderPreviewTable() {
+  const tbody = $("#preview-body");
+  if (!tbody) return;
 
-  async function fetchPreview() {
-    resultContainer.textContent = "Fetching preview...";
-    const res = await fetch("/admin/api/preview-sync", {
-      method: "POST",
-    });
-    const data = await res.json();
+  const rows = [];
+  previewData.actions.create.forEach(code => rows.push({ code, action: "create" }));
+  previewData.actions.update.forEach(code => rows.push({ code, action: "update" }));
+  previewData.actions.delete.forEach(code => rows.push({ code, action: "delete" }));
 
-    resultContainer.textContent = "";
-    previewTable.innerHTML = "";
+  tbody.innerHTML = rows.map(r => `
+    <tr>
+      <td class="td-sm code">${esc(r.code)}</td>
+      <td class="td-sm action-${r.action} text-capitalize">${esc(r.action)}</td>
+    </tr>
+  `).join("");
+}
 
-    const { create, update, delete: del } = data.actions;
-    const counts = data.counts;
-
-    if (!create.length && !update.length && !del.length) {
-      previewTable.innerHTML = "<tr><td colspan='3'>✅ No sync actions needed.</td></tr>";
-      return;
-    }
-
-    for (const code of create) {
-      previewTable.innerHTML += `<tr><td>${code}</td><td>Create</td><td><button class='btn btn-sm btn-success' onclick="syncSingle('create', '${code}')">▶</button></td></tr>`;
-    }
-    for (const code of update) {
-      previewTable.innerHTML += `<tr><td>${code}</td><td>Update</td><td><button class='btn btn-sm btn-warning' onclick="syncSingle('update', '${code}')">▶</button></td></tr>`;
-    }
-    for (const code of del) {
-      previewTable.innerHTML += `<tr><td>${code}</td><td>Delete</td><td><button class='btn btn-sm btn-danger' onclick="syncSingle('delete', '${code}')">▶</button></td></tr>`;
-    }
+// ------------- API -------------
+async function loadMapping() {
+  const { data } = await axios.get("/admin/api/mapping");
+  mappingData = data || { auto: [], overrides: [] };
+  renderMappingTables();
+}
+async function saveMapping(newData) {
+  await axios.put("/admin/api/mapping", newData);
+  await loadMapping();
+}
+async function runPreview() {
+  try {
+    const { data } = await axios.post("/admin/api/preview-sync");
+    previewData = data;
+    renderPreviewTable();
+    showAlert("info", "Preview refreshed");
+  } catch (e) {
+    console.error(e);
+    showAlert("danger", "Failed to run preview");
   }
-
-  window.syncSingle = async function (action, code) {
-    alert(`This demo does not support single ${action} for: ${code}`);
-    // You can implement single item sync using a custom API.
-  };
-
-  async function bulkSync(action) {
-    resultContainer.textContent = `Processing ${action.toUpperCase()}...`;
-    const res = await fetch(`/api/sync/${action}`, {
-      method: "POST",
-    });
-    const data = await res.json();
-    resultContainer.textContent = JSON.stringify(data, null, 2);
-    fetchPreview(); // Refresh table
+}
+async function triggerBulk(action) {
+  try {
+    const { data } = await axios.post(`/api/sync/${action}`);
+    const ok = Object.values(data)[0] || [];
+    const failed = data.failed || [];
+    showAlert(failed.length ? "warning" : "success",
+      `${action.toUpperCase()}: OK=${ok.length} Failed=${failed.length}`);
+    await Promise.all([loadMapping(), runPreview()]);
+  } catch (e) {
+    console.error(e);
+    showAlert("danger", `Bulk ${action} failed`);
   }
+}
 
-  document.getElementById("sync-create").addEventListener("click", () => bulkSync("create"));
-  document.getElementById("sync-update").addEventListener("click", () => bulkSync("update"));
-  document.getElementById("sync-delete").addEventListener("click", () => bulkSync("delete"));
+// ------------- overrides editing -------------
+function addOverrideRow() {
+  mappingData.overrides.push({ erp_item_code: "", forced_wc_product_id: "", note: "" });
+  renderMappingTables();
+}
+function removeOverrideRow(idx) {
+  mappingData.overrides.splice(idx, 1);
+  renderMappingTables();
+}
+async function saveOverrides() {
+  const rows = $$("#overrides-body tr");
+  const overrides = rows.map(tr => {
+    const [erpEl, wcEl, noteEl] = tr.querySelectorAll("input");
+    return {
+      erp_item_code: erpEl.value.trim(),
+      forced_wc_product_id: wcEl.value ? Number(wcEl.value) : null,
+      note: noteEl.value.trim() || undefined,
+    };
+  });
+  const payload = { auto: mappingData.auto, overrides };
+  try {
+    await saveMapping(payload);
+    showAlert("success", "Overrides saved");
+  } catch (e) {
+    console.error(e);
+    showAlert("danger", "Failed to save overrides");
+  }
+}
 
-  fetchPreview();
+async function reloadMapping() {
+  await loadMapping();
+  showAlert("info", "Mapping reloaded");
+}
+
+// ------------- expose globals -------------
+window.runPreview = runPreview;
+window.triggerBulk = triggerBulk;
+window.addOverrideRow = addOverrideRow;
+window.removeOverrideRow = removeOverrideRow;
+window.saveOverrides = saveOverrides;
+window.reloadMapping = reloadMapping;
+
+// ------------- init -------------
+document.addEventListener("DOMContentLoaded", async () => {
+  await loadMapping();
+  await runPreview();
+  initTooltips();
 });
-

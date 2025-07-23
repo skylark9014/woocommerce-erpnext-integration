@@ -1,118 +1,140 @@
 # =============================
 # ERPNext API Helpers
-# - Fetch ERP Items
-# - Get Item Price
-# - Fetch Private File Content
 # =============================
 
 import os
 import httpx
-from typing import Any, List
 from dotenv import load_dotenv
+from typing import List, Optional, Dict, Any
+from functools import lru_cache
+
+from app.erp.erpnext_client import get_client, get_doc, get_list  # <-- new imports
 
 load_dotenv()
 
-ERP_BASE = os.environ.get("ERP_URL")
-ERP_API_KEY = os.environ.get("ERP_API_KEY")
-ERP_API_SECRET = os.environ.get("ERP_API_SECRET")
+ERP_URL = os.getenv("ERP_URL")
+ERP_API_KEY = os.getenv("ERP_API_KEY")
+ERP_API_SECRET = os.getenv("ERP_API_SECRET")
 
-HEADERS = {
-    "Authorization": f"token {ERP_API_KEY}:{ERP_API_SECRET}"
-}
+HEADERS = {"Authorization": f"token {ERP_API_KEY}:{ERP_API_SECRET}"}
 
-# =============================
-# ✅ Get List of ERP Items
-# =============================
+
 def get_erpnext_items() -> List[dict]:
     """
     Fetch Item list from ERPNext.
-    Returns a list of dicts, each containing item_code, item_name, description, and image.
+    Returns a list of dicts: item_code, item_name, description, image.
+    (sync HTTP call is fine here)
     """
-    url = f"{ERP_BASE}/api/resource/Item?fields=[%22item_code%22,%22item_name%22,%22description%22,%22image%22]&limit_page_length=1000"
+    url = (
+        f"{ERP_URL}/api/resource/Item"
+        '?fields=["item_code","item_name","description","image"]'
+        "&limit_page_length=1000"
+    )
     try:
-        response = httpx.get(url, headers=HEADERS, timeout=15.0)
-        response.raise_for_status()
-        return response.json().get("data", [])
+        r = httpx.get(url, headers=HEADERS, timeout=15.0)
+        r.raise_for_status()
+        return r.json().get("data", [])
     except Exception as e:
         print(f"❌ Failed to fetch ERP items: {e}")
         return []
 
-# =============================
-# ✅ Get Price from Price List
-# =============================
-async def get_price_from_pricelist(client: httpx.AsyncClient, item_code: str, price_list: str) -> float | None:
+
+async def get_price_from_pricelist(
+    client: Optional[httpx.AsyncClient],
+    item_code: str,
+    price_list: str,
+) -> Optional[float]:
     """
-    Fetch item price from a specific Price List.
-    Returns the price as a float, or None on error.
+    Fetch price for an item from a specific Price List.
     """
-    url = f"{ERP_BASE}/api/method/frappe.client.get_list"
+    close_client = False
+    if client is None:
+        client = httpx.AsyncClient()
+        close_client = True
     try:
-        resp = await client.post(url, headers=HEADERS, json={
-            "doctype": "Item Price",
-            "fields": ["price_list_rate"],
-            "filters": {
-                "item_code": item_code,
-                "price_list": price_list
+        resp = await client.post(
+            f"{ERP_URL}/api/method/frappe.client.get_list",
+            headers=HEADERS,
+            json={
+                "doctype": "Item Price",
+                "fields": ["price_list_rate"],
+                "filters": {"item_code": item_code, "price_list": price_list},
+                "limit_page_length": 1,
             },
-            "limit_page_length": 1
-        })
+        )
         resp.raise_for_status()
-        data = resp.json().get("message")
-        if data and len(data):
-            return float(data[0]["price_list_rate"])
+        data = resp.json().get("message") or []
+        return float(data[0]["price_list_rate"]) if data else None
     except Exception as e:
         print(f"❌ Price lookup failed for {item_code}: {e}")
-    return None
+        return None
+    finally:
+        if close_client:
+            await client.aclose()
 
-# =============================
-# ✅ Fetch Private Image Bytes
-# =============================
-async def fetch_private_file(file_url: str) -> bytes | None:
+
+async def fetch_private_file(file_url: str) -> Optional[bytes]:
     """
-    Fetch private image file from ERPNext (/private/files/...)
-    Returns bytes if successful, else None.
+    Download a private file (/private/files/...) from ERPNext.
     """
-    full_url = ERP_BASE + file_url
     try:
         async with httpx.AsyncClient() as client:
-            resp = await client.get(full_url, headers=HEADERS)
+            resp = await client.get(ERP_URL + file_url, headers=HEADERS)
             if resp.status_code == 200:
                 return resp.content
     except Exception as e:
         print(f"❌ Failed to fetch private file: {e}")
     return None
 
-# =============================
-# ✅ Get or Create Customer by Email
-# =============================
-async def get_or_create_customer_by_email(client: httpx.AsyncClient, email: str) -> str:
-    """
-    Returns the ERPNext Customer name for a given email.
-    If the Customer does not exist, creates it.
-    """
-    # 1. Try to find existing customer
-    url = f"{ERP_BASE}/api/resource/Customer?fields=[%22name%22]&filters={{%22email_id%22:%22{email}%22}}&limit_page_length=1"
-    try:
-        resp = await client.get(url, headers=HEADERS, timeout=15.0)
-        resp.raise_for_status()
-        data = resp.json().get("data", [])
-        if data:
-            return data[0]["name"]
-    except Exception as e:
-        print(f"❌ Lookup customer failed: {e}")
 
-    # 2. Create new customer
+# -----------------------------
+# Price list discovery
+# -----------------------------
+@lru_cache(maxsize=1)
+def _env_pricelist():
+    return (
+        os.getenv("ERP_DEFAULT_PRICE_LIST")
+        or os.getenv("ERP_PRICE_LIST")
+        or os.getenv("PRICE_LIST")
+    )
+
+
+async def get_default_pricelist(company: str | None = None) -> str:
+    """
+    Decide which selling price list to use, in this order:
+      1) Env var (ERP_DEFAULT_PRICE_LIST / ERP_PRICE_LIST / PRICE_LIST)
+      2) Selling Settings.selling_price_list
+      3) First enabled Selling Price List (optionally filtered by company)
+      4) Fallback: "Standard Selling"
+    """
+    env_pl = _env_pricelist()
+    if env_pl:
+        return env_pl
+
+    # 2) Selling Settings doc
     try:
-        payload = {
-            "doctype": "Customer",
-            "customer_name": email.split("@")[0],
-            "email_id": email,
-            "customer_group": "All Customer Groups",
-            "territory": "All Territories"
-        }
-        create_resp = await client.post(f"{ERP_BASE}/api/resource/Customer", headers=HEADERS, json=payload)
-        create_resp.raise_for_status()
-        return create_resp.json()["data"]["name"]
-    except Exception as e:
-        print(f"❌ Create customer failed: {e}")
-        raise
+        ss = await get_doc("Selling Settings", "Selling Settings")
+        if ss and ss.get("selling_price_list"):
+            return ss["selling_price_list"]
+    except Exception:
+        pass
+
+    # 3) First enabled selling Price List
+    try:
+        filters: List[List[Any]] = [["selling", "=", 1], ["enabled", "=", 1]]
+        if company:
+            filters.append(["company", "=", company])
+
+        pls = await get_list(
+            "Price List",
+            filters=filters,
+            fields=["name"],
+            limit_page_length=1,
+            order_by="modified desc",
+        )
+        if pls:
+            return pls[0]["name"]
+    except Exception:
+        pass
+
+    return "Standard Selling"

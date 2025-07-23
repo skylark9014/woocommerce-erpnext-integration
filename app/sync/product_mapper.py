@@ -1,61 +1,54 @@
-# =============================
-# Product Mapper - Sync Logic Helpers
-# =============================
-
-from typing import Tuple
-from app.mapping.mapping_store import save_mapping
-
-# -----------------------------
-# ✅ Generate Auto Mapping
-# -----------------------------
-def generate_auto_mapping(wc_products, erp_items) -> list[dict]:
-    wc_index = {p["sku"]: p for p in wc_products if p.get("sku")}
-    rows = []
-    for it in erp_items:
-        sku = it["item_code"]
-        wc = wc_index.get(sku)
-        rows.append({
-            "erp_item_code": sku,
-            "wc_product_id": wc["id"] if wc else None,
-            "wc_sku": wc["sku"] if wc else None,
-            "status": "matched" if wc else "missing_wc",
-            "last_synced": None,
-            "last_price": None,
-            "last_image_media_id": None,
-            "last_image_filename": None,
-            "last_image_size": None
-        })
-    return rows
+# app/sync/product_mapper.py
+from __future__ import annotations
+from pathlib import Path
+import json
+from typing import List, Tuple
 
 # -----------------------------
-# ✅ Apply Overrides
+# Mapping store helpers
 # -----------------------------
-def apply_overrides(auto_rows: list[dict], overrides: list[dict]) -> list[dict]:
-    idx = {r["erp_item_code"]: r for r in auto_rows}
+def build_or_load_mapping(mapping_path: str,
+                          wc_products: List[dict],
+                          erp_items: List[dict]) -> Tuple[List[dict], List[dict]]:
+    """
+    Load mapping.json if present, otherwise build 'auto' rows from ERP & Woo.
+    Returns (auto_rows, overrides)
+    """
+    p = Path(mapping_path)
+    if p.exists():
+        data = json.loads(p.read_text())
+        return data.get("auto", []), data.get("overrides", [])
+    # first build
+    erp_codes = {i["item_code"] for i in erp_items}
+    auto_rows = [{"erp_item_code": c,
+                  "wc_product_id": None,
+                  "wc_sku": None,
+                  "status": "unmatched",
+                  "last_synced": None,
+                  "last_price": None} for c in sorted(erp_codes)]
+    return auto_rows, []
+
+def apply_overrides(auto_rows: List[dict], overrides: List[dict]) -> None:
+    """Force wc_product_id where an override exists."""
+    by_code = {r["erp_item_code"]: r for r in auto_rows}
     for ov in overrides:
         code = ov.get("erp_item_code")
-        if not code:
+        if not code or code not in by_code:
             continue
-        base = idx.get(code)
-        if not base:
-            base = {"erp_item_code": code}
-            auto_rows.append(base)
-            idx[code] = base
-        if ov.get("forced_wc_product_id") is not None:
-            base["wc_product_id"] = ov["forced_wc_product_id"]
-    return auto_rows
+        by_code[code]["wc_product_id"] = ov.get("forced_wc_product_id")
 
 # -----------------------------
-# ✅ Load or Generate Mapping
+# Core transform ERP → WC
 # -----------------------------
-def build_or_load_mapping(path: str, wc_products: list, erp_items: list) -> Tuple[list, list]:
-    from app.mapping.mapping_store import load_mapping_raw, migrate_if_needed
-    raw = load_mapping_raw(path)
-    if raw:
-        raw = migrate_if_needed(raw)
-        return raw["auto"], raw["overrides"]
-    auto_rows = generate_auto_mapping(wc_products, erp_items)
-    overrides = []
-    save_mapping(path, auto_rows, overrides)
-    return auto_rows, overrides
-
+def map_erp_to_wc_product(erp_doc: dict, price: float | None) -> dict:
+    """
+    Build a WooCommerce product payload from an ERPNext Item doc + price.
+    """
+    return {
+        "name": erp_doc.get("item_name") or erp_doc.get("item_code"),
+        "sku": erp_doc.get("item_code"),
+        "regular_price": f"{price:.2f}" if price is not None else "0.00",
+        "description": erp_doc.get("description") or "",
+        "short_description": (erp_doc.get("description") or "")[:140],
+        # extend with categories, images, etc as needed
+    }
