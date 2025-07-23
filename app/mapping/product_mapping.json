@@ -2,521 +2,986 @@
   "auto": [
     {
       "erp_item_code": "GLU_35S",
-      "wc_product_id": 247,
-      "wc_sku": "GLU_35S",
-      "status": "matched",
-      "last_synced": null,
-      "last_price": null,
-      "last_image_media_id": null,
       "last_image_filename": null,
-      "last_image_size": null
+      "last_image_media_id": null,
+      "last_image_size": null,
+      "last_price": 146.9312,
+      "last_synced": "2025-07-23T21:46:01.549679Z",
+      "status": "unmatched",
+      "wc_product_id": null,
+      "wc_sku": null
     },
     {
       "erp_item_code": "MST_120X60_ANDES",
-      "wc_product_id": 248,
-      "wc_sku": "MST_120X60_ANDES",
-      "status": "matched",
-      "last_synced": null,
-      "last_price": null,
-      "last_image_media_id": null,
       "last_image_filename": null,
-      "last_image_size": null
+      "last_image_media_id": null,
+      "last_image_size": null,
+      "last_price": 882.96,
+      "last_synced": "2025-07-23T21:46:06.650167Z",
+      "status": "updated",
+      "wc_product_id": 248,
+      "wc_sku": "MST_120X60_ANDES"
     },
     {
       "erp_item_code": "MST_120X60_DRAKENSBERG",
-      "wc_product_id": 249,
-      "wc_sku": "MST_120X60_DRAKENSBERG",
-      "status": "matched",
-      "last_synced": null,
-      "last_price": null,
-      "last_image_media_id": null,
       "last_image_filename": null,
-      "last_image_size": null
+      "last_image_media_id": null,
+      "last_image_size": null,
+      "last_price": 882.96,
+      "last_synced": "2025-07-23T21:46:12.206318Z",
+      "status": "updated",
+      "wc_product_id": 249,
+      "wc_sku": "MST_120X60_DRAKENSBERG"
     },
     {
       "erp_item_code": "MST_120X60_EVEREST",
-      "wc_product_id": 250,
-      "wc_sku": "MST_120X60_EVEREST",
-      "status": "matched",
-      "last_synced": null,
-      "last_price": null,
-      "last_image_media_id": null,
       "last_image_filename": null,
-      "last_image_size": null
+      "last_image_media_id": null,
+      "last_image_size": null,
+      "last_price": 882.96,
+      "last_synced": "2025-07-23T21:46:21.794054Z",
+      "status": "updated",
+      "wc_product_id": 250,
+      "wc_sku": "MST_120X60_EVEREST"
     },
     {
       "erp_item_code": "MST_120X60_HIGHLANDS",
-      "wc_product_id": 251,
-      "wc_sku": "MST_120X60_HIGHLANDS",
-      "status": "matched",
-      "last_synced": null,
-      "last_price": null,
-      "last_image_media_id": null,
       "last_image_filename": null,
-      "last_image_size": null
+      "last_image_media_id": null,
+      "last_image_size": null,
+      "last_price": 882.96,
+      "last_synced": "2025-07-23T21:46:27.661906Z",
+      "status": "updated",
+      "wc_product_id": 251,
+      "wc_sku": "MST_120X60_HIGHLANDS"
     },
     {
       "erp_item_code": "MST_120X60_HIMALAYAS",
-      "wc_product_id": 252,
-      "wc_sku": "MST_120X60_HIMALAYAS",
-      "status": "matched",
-      "last_synced": null,
-      "last_price": null,
-      "last_image_media_id": null,
       "last_image_filename": null,
-      "last_image_size": null
+      "last_image_media_id": null,
+      "last_image_size": null,
+      "last_price": 882.96,
+      "last_synced": "2025-07-23T21:46:33.804520Z",
+      "status": "updated",
+      "wc_product_id": 252,
+      "wc_sku": "MST_120X60_HIMALAYAS"
     },
     {
       "erp_item_code": "PST_60X15_ALPES",
-      "wc_product_id": 253,
-      "wc_sku": "PST_60X15_ALPES",
-      "status": "matched",
-      "last_synced": null,
-      "last_price": null,
-      "last_image_media_id": null,
       "last_image_filename": null,
-      "last_image_size": null
+      "last_image_media_id": null,
+      "last_image_size": null,
+      "last_price": 795.496,
+      "last_synced": "2025-07-23T21:46:39.128321Z",
+      "status": "updated",
+      "wc_product_id": 253,
+      "wc_sku": "PST_60X15_ALPES"
     },
     {
       "erp_item_code": "PST_60X15_ANDES",
-      "wc_product_id": 254,
-      "wc_sku": "PST_60X15_ANDES",
-      "status": "matched",
-      "last_synced": null,
-      "last_price": null,
-      "last_image_media_id": null,
       "last_image_filename": null,
-      "last_image_size": null
+      "last_image_media_id": null,
+      "last_image_size": null,
+      "last_price": 795.496,
+      "last_synced": "2025-07-23T21:46:44.662952Z",
+      "status": "updated",
+      "wc_product_id": 254,
+      "wc_sku": "PST_60X15_ANDES"
     },
     {
       "erp_item_code": "PST_60X15_ATLAS",
-      "wc_product_id": 255,
-      "wc_sku": "PST_60X15_ATLAS",
-      "status": "matched",
-      "last_synced": null,
-      "last_price": null,
-      "last_image_media_id": null,
       "last_image_filename": null,
-      "last_image_size": null
+      "last_image_media_id": null,
+      "last_image_size": null,
+      "last_price": 795.496,
+      "last_synced": "2025-07-23T21:46:50.289877Z",
+      "status": "updated",
+      "wc_product_id": 255,
+      "wc_sku": "PST_60X15_ATLAS"
     },
     {
       "erp_item_code": "PST_60X15_CERES",
-      "wc_product_id": 256,
-      "wc_sku": "PST_60X15_CERES",
-      "status": "matched",
-      "last_synced": null,
-      "last_price": null,
-      "last_image_media_id": null,
       "last_image_filename": null,
-      "last_image_size": null
+      "last_image_media_id": null,
+      "last_image_size": null,
+      "last_price": 795.496,
+      "last_synced": "2025-07-23T21:46:56.535574Z",
+      "status": "updated",
+      "wc_product_id": 256,
+      "wc_sku": "PST_60X15_CERES"
     },
     {
       "erp_item_code": "PST_60X15_DRAKENSBERG",
-      "wc_product_id": 257,
-      "wc_sku": "PST_60X15_DRAKENSBERG",
-      "status": "matched",
-      "last_synced": null,
-      "last_price": null,
-      "last_image_media_id": null,
       "last_image_filename": null,
-      "last_image_size": null
+      "last_image_media_id": null,
+      "last_image_size": null,
+      "last_price": 795.496,
+      "last_synced": "2025-07-23T21:47:02.682488Z",
+      "status": "updated",
+      "wc_product_id": 257,
+      "wc_sku": "PST_60X15_DRAKENSBERG"
     },
     {
       "erp_item_code": "PST_60X15_EVEREST",
-      "wc_product_id": 258,
-      "wc_sku": "PST_60X15_EVEREST",
-      "status": "matched",
-      "last_synced": null,
-      "last_price": null,
-      "last_image_media_id": null,
       "last_image_filename": null,
-      "last_image_size": null
+      "last_image_media_id": null,
+      "last_image_size": null,
+      "last_price": 795.496,
+      "last_synced": "2025-07-23T21:47:08.414370Z",
+      "status": "updated",
+      "wc_product_id": 258,
+      "wc_sku": "PST_60X15_EVEREST"
     },
     {
       "erp_item_code": "PST_60X15_HIGHLANDS",
-      "wc_product_id": 259,
-      "wc_sku": "PST_60X15_HIGHLANDS",
-      "status": "matched",
-      "last_synced": null,
-      "last_price": null,
-      "last_image_media_id": null,
       "last_image_filename": null,
-      "last_image_size": null
+      "last_image_media_id": null,
+      "last_image_size": null,
+      "last_price": 795.496,
+      "last_synced": "2025-07-23T21:47:13.617289Z",
+      "status": "updated",
+      "wc_product_id": 259,
+      "wc_sku": "PST_60X15_HIGHLANDS"
     },
     {
       "erp_item_code": "PST_60X15_HIMALAYAS",
-      "wc_product_id": 260,
-      "wc_sku": "PST_60X15_HIMALAYAS",
-      "status": "matched",
-      "last_synced": null,
-      "last_price": null,
-      "last_image_media_id": null,
       "last_image_filename": null,
-      "last_image_size": null
+      "last_image_media_id": null,
+      "last_image_size": null,
+      "last_price": 795.496,
+      "last_synced": "2025-07-23T21:47:19.166327Z",
+      "status": "updated",
+      "wc_product_id": 260,
+      "wc_sku": "PST_60X15_HIMALAYAS"
     },
     {
       "erp_item_code": "PST_60X15_MOUNTFUJI",
-      "wc_product_id": 261,
-      "wc_sku": "PST_60X15_MOUNTFUJI",
-      "status": "matched",
-      "last_synced": null,
-      "last_price": null,
-      "last_image_media_id": null,
       "last_image_filename": null,
-      "last_image_size": null
+      "last_image_media_id": null,
+      "last_image_size": null,
+      "last_price": 795.496,
+      "last_synced": "2025-07-23T21:47:30.839886Z",
+      "status": "updated",
+      "wc_product_id": 261,
+      "wc_sku": "PST_60X15_MOUNTFUJI"
     },
     {
       "erp_item_code": "PST_60X15_NEVADA",
-      "wc_product_id": 262,
-      "wc_sku": "PST_60X15_NEVADA",
-      "status": "matched",
-      "last_synced": null,
-      "last_price": null,
-      "last_image_media_id": null,
       "last_image_filename": null,
-      "last_image_size": null
+      "last_image_media_id": null,
+      "last_image_size": null,
+      "last_price": 795.496,
+      "last_synced": "2025-07-23T21:47:36.854414Z",
+      "status": "updated",
+      "wc_product_id": 262,
+      "wc_sku": "PST_60X15_NEVADA"
     },
     {
       "erp_item_code": "PST_60X15_ROCKYMOUNTAIN",
-      "wc_product_id": 263,
-      "wc_sku": "PST_60X15_ROCKYMOUNTAIN",
-      "status": "matched",
-      "last_synced": null,
-      "last_price": null,
-      "last_image_media_id": null,
       "last_image_filename": null,
-      "last_image_size": null
+      "last_image_media_id": null,
+      "last_image_size": null,
+      "last_price": 795.496,
+      "last_synced": "2025-07-23T21:47:42.246252Z",
+      "status": "updated",
+      "wc_product_id": 263,
+      "wc_sku": "PST_60X15_ROCKYMOUNTAIN"
     },
     {
       "erp_item_code": "SLR_1S01",
-      "wc_product_id": 264,
-      "wc_sku": "SLR_1S01",
-      "status": "matched",
-      "last_synced": null,
-      "last_price": null,
-      "last_image_media_id": null,
       "last_image_filename": null,
-      "last_image_size": null
+      "last_image_media_id": null,
+      "last_image_size": null,
+      "last_price": 357.0112,
+      "last_synced": "2025-07-23T21:47:49.172367Z",
+      "status": "updated",
+      "wc_product_id": 264,
+      "wc_sku": "SLR_1S01"
     },
     {
       "erp_item_code": "SVR_120X60_ALASKA",
-      "wc_product_id": 265,
-      "wc_sku": "SVR_120X60_ALASKA",
-      "status": "matched",
-      "last_synced": null,
-      "last_price": null,
-      "last_image_media_id": null,
       "last_image_filename": null,
-      "last_image_size": null
+      "last_image_media_id": null,
+      "last_image_size": null,
+      "last_price": 764.296,
+      "last_synced": "2025-07-23T21:47:54.693656Z",
+      "status": "updated",
+      "wc_product_id": 265,
+      "wc_sku": "SVR_120X60_ALASKA"
     },
     {
       "erp_item_code": "SVR_120X60_ANDES",
-      "wc_product_id": 266,
-      "wc_sku": "SVR_120X60_ANDES",
-      "status": "matched",
-      "last_synced": null,
-      "last_price": null,
-      "last_image_media_id": null,
       "last_image_filename": null,
-      "last_image_size": null
+      "last_image_media_id": null,
+      "last_image_size": null,
+      "last_price": 764.296,
+      "last_synced": "2025-07-23T21:48:00.189916Z",
+      "status": "updated",
+      "wc_product_id": 266,
+      "wc_sku": "SVR_120X60_ANDES"
     },
     {
       "erp_item_code": "SVR_120X60_ATLAS",
-      "wc_product_id": 267,
-      "wc_sku": "SVR_120X60_ATLAS",
-      "status": "matched",
-      "last_synced": null,
-      "last_price": null,
-      "last_image_media_id": null,
       "last_image_filename": null,
-      "last_image_size": null
+      "last_image_media_id": null,
+      "last_image_size": null,
+      "last_price": 764.296,
+      "last_synced": "2025-07-23T21:48:05.345567Z",
+      "status": "updated",
+      "wc_product_id": 267,
+      "wc_sku": "SVR_120X60_ATLAS"
     },
     {
       "erp_item_code": "SVR_120X60_CASCADE",
-      "wc_product_id": 268,
-      "wc_sku": "SVR_120X60_CASCADE",
-      "status": "matched",
-      "last_synced": null,
-      "last_price": null,
-      "last_image_media_id": null,
       "last_image_filename": null,
-      "last_image_size": null
+      "last_image_media_id": null,
+      "last_image_size": null,
+      "last_price": 764.296,
+      "last_synced": "2025-07-23T21:48:10.981725Z",
+      "status": "updated",
+      "wc_product_id": 268,
+      "wc_sku": "SVR_120X60_CASCADE"
     },
     {
       "erp_item_code": "SVR_120X60_DOLOMITES",
-      "wc_product_id": 269,
-      "wc_sku": "SVR_120X60_DOLOMITES",
-      "status": "matched",
-      "last_synced": null,
-      "last_price": null,
-      "last_image_media_id": null,
       "last_image_filename": null,
-      "last_image_size": null
+      "last_image_media_id": null,
+      "last_image_size": null,
+      "last_price": 764.296,
+      "last_synced": "2025-07-23T21:48:16.131399Z",
+      "status": "updated",
+      "wc_product_id": 269,
+      "wc_sku": "SVR_120X60_DOLOMITES"
     },
     {
       "erp_item_code": "SVR_120X60_DRAKENSBERG",
-      "wc_product_id": 270,
-      "wc_sku": "SVR_120X60_DRAKENSBERG",
-      "status": "matched",
-      "last_synced": null,
-      "last_price": null,
-      "last_image_media_id": null,
       "last_image_filename": null,
-      "last_image_size": null
+      "last_image_media_id": null,
+      "last_image_size": null,
+      "last_price": 764.296,
+      "last_synced": "2025-07-23T21:48:22.656762Z",
+      "status": "updated",
+      "wc_product_id": 270,
+      "wc_sku": "SVR_120X60_DRAKENSBERG"
     },
     {
       "erp_item_code": "SVR_120X60_EVEREST",
-      "wc_product_id": 271,
-      "wc_sku": "SVR_120X60_EVEREST",
-      "status": "matched",
-      "last_synced": null,
-      "last_price": null,
-      "last_image_media_id": null,
       "last_image_filename": null,
-      "last_image_size": null
+      "last_image_media_id": null,
+      "last_image_size": null,
+      "last_price": 764.296,
+      "last_synced": "2025-07-23T21:48:27.974363Z",
+      "status": "updated",
+      "wc_product_id": 271,
+      "wc_sku": "SVR_120X60_EVEREST"
     },
     {
       "erp_item_code": "SVR_120X60_HIGHLANDS",
-      "wc_product_id": 272,
-      "wc_sku": "SVR_120X60_HIGHLANDS",
-      "status": "matched",
-      "last_synced": null,
-      "last_price": null,
-      "last_image_media_id": null,
       "last_image_filename": null,
-      "last_image_size": null
+      "last_image_media_id": null,
+      "last_image_size": null,
+      "last_price": 764.296,
+      "last_synced": "2025-07-23T21:48:33.200200Z",
+      "status": "updated",
+      "wc_product_id": 272,
+      "wc_sku": "SVR_120X60_HIGHLANDS"
     },
     {
       "erp_item_code": "SVR_120X60_HIMALAYAS",
-      "wc_product_id": 273,
-      "wc_sku": "SVR_120X60_HIMALAYAS",
-      "status": "matched",
-      "last_synced": null,
-      "last_price": null,
-      "last_image_media_id": null,
       "last_image_filename": null,
-      "last_image_size": null
+      "last_image_media_id": null,
+      "last_image_size": null,
+      "last_price": 764.296,
+      "last_synced": "2025-07-23T21:48:39.652797Z",
+      "status": "updated",
+      "wc_product_id": 273,
+      "wc_sku": "SVR_120X60_HIMALAYAS"
     },
     {
       "erp_item_code": "SVR_120X60_MOUNTCAMEROON",
-      "wc_product_id": 274,
-      "wc_sku": "SVR_120X60_MOUNTCAMEROON",
-      "status": "matched",
-      "last_synced": null,
-      "last_price": null,
-      "last_image_media_id": null,
       "last_image_filename": null,
-      "last_image_size": null
+      "last_image_media_id": null,
+      "last_image_size": null,
+      "last_price": 764.296,
+      "last_synced": "2025-07-23T21:48:45.590004Z",
+      "status": "updated",
+      "wc_product_id": 274,
+      "wc_sku": "SVR_120X60_MOUNTCAMEROON"
     },
     {
       "erp_item_code": "SVR_120X60_MOUNTCOOK",
-      "wc_product_id": 275,
-      "wc_sku": "SVR_120X60_MOUNTCOOK",
-      "status": "matched",
-      "last_synced": null,
-      "last_price": null,
-      "last_image_media_id": null,
       "last_image_filename": null,
-      "last_image_size": null
+      "last_image_media_id": null,
+      "last_image_size": null,
+      "last_price": 764.296,
+      "last_synced": "2025-07-23T21:48:51.423407Z",
+      "status": "updated",
+      "wc_product_id": 275,
+      "wc_sku": "SVR_120X60_MOUNTCOOK"
     },
     {
       "erp_item_code": "SVR_120X60_SIERRA",
-      "wc_product_id": 276,
-      "wc_sku": "SVR_120X60_SIERRA",
-      "status": "matched",
-      "last_synced": null,
-      "last_price": null,
-      "last_image_media_id": null,
       "last_image_filename": null,
-      "last_image_size": null
+      "last_image_media_id": null,
+      "last_image_size": null,
+      "last_price": 764.296,
+      "last_synced": "2025-07-23T21:48:56.861457Z",
+      "status": "updated",
+      "wc_product_id": 276,
+      "wc_sku": "SVR_120X60_SIERRA"
     },
     {
       "erp_item_code": "SVR_240X120_ALASKA",
-      "wc_product_id": 277,
-      "wc_sku": "SVR_240X120_ALASKA",
-      "status": "matched",
-      "last_synced": null,
-      "last_price": null,
-      "last_image_media_id": null,
       "last_image_filename": null,
-      "last_image_size": null
+      "last_image_media_id": null,
+      "last_image_size": null,
+      "last_price": 3566.16,
+      "last_synced": "2025-07-23T21:49:02.215583Z",
+      "status": "updated",
+      "wc_product_id": 277,
+      "wc_sku": "SVR_240X120_ALASKA"
     },
     {
       "erp_item_code": "SVR_240X120_ANDES",
-      "wc_product_id": 278,
-      "wc_sku": "SVR_240X120_ANDES",
-      "status": "matched",
-      "last_synced": null,
-      "last_price": null,
-      "last_image_media_id": null,
       "last_image_filename": null,
-      "last_image_size": null
+      "last_image_media_id": null,
+      "last_image_size": null,
+      "last_price": 3566.16,
+      "last_synced": "2025-07-23T21:49:08.524200Z",
+      "status": "updated",
+      "wc_product_id": 278,
+      "wc_sku": "SVR_240X120_ANDES"
     },
     {
       "erp_item_code": "SVR_240X120_ATLAS",
-      "wc_product_id": 279,
-      "wc_sku": "SVR_240X120_ATLAS",
-      "status": "matched",
-      "last_synced": null,
-      "last_price": null,
-      "last_image_media_id": null,
       "last_image_filename": null,
-      "last_image_size": null
+      "last_image_media_id": null,
+      "last_image_size": null,
+      "last_price": 3566.16,
+      "last_synced": "2025-07-23T21:49:13.848692Z",
+      "status": "updated",
+      "wc_product_id": 279,
+      "wc_sku": "SVR_240X120_ATLAS"
     },
     {
       "erp_item_code": "SVR_240X120_CASCADE",
-      "wc_product_id": 280,
-      "wc_sku": "SVR_240X120_CASCADE",
-      "status": "matched",
-      "last_synced": null,
-      "last_price": null,
-      "last_image_media_id": null,
       "last_image_filename": null,
-      "last_image_size": null
+      "last_image_media_id": null,
+      "last_image_size": null,
+      "last_price": 3566.16,
+      "last_synced": "2025-07-23T21:49:19.076304Z",
+      "status": "updated",
+      "wc_product_id": 280,
+      "wc_sku": "SVR_240X120_CASCADE"
     },
     {
       "erp_item_code": "SVR_240X120_DOLOMITES",
-      "wc_product_id": 281,
-      "wc_sku": "SVR_240X120_DOLOMITES",
-      "status": "matched",
-      "last_synced": null,
-      "last_price": null,
-      "last_image_media_id": null,
       "last_image_filename": null,
-      "last_image_size": null
+      "last_image_media_id": null,
+      "last_image_size": null,
+      "last_price": 3566.16,
+      "last_synced": "2025-07-23T21:49:31.569326Z",
+      "status": "updated",
+      "wc_product_id": 281,
+      "wc_sku": "SVR_240X120_DOLOMITES"
     },
     {
       "erp_item_code": "SVR_240X120_DRAKENSBERG",
-      "wc_product_id": 282,
-      "wc_sku": "SVR_240X120_DRAKENSBERG",
-      "status": "matched",
-      "last_synced": null,
-      "last_price": null,
-      "last_image_media_id": null,
       "last_image_filename": null,
-      "last_image_size": null
+      "last_image_media_id": null,
+      "last_image_size": null,
+      "last_price": 3566.16,
+      "last_synced": "2025-07-23T21:49:36.840054Z",
+      "status": "updated",
+      "wc_product_id": 282,
+      "wc_sku": "SVR_240X120_DRAKENSBERG"
     },
     {
       "erp_item_code": "SVR_240X120_EVEREST",
-      "wc_product_id": 283,
-      "wc_sku": "SVR_240X120_EVEREST",
-      "status": "matched",
-      "last_synced": null,
-      "last_price": null,
-      "last_image_media_id": null,
       "last_image_filename": null,
-      "last_image_size": null
+      "last_image_media_id": null,
+      "last_image_size": null,
+      "last_price": 3566.16,
+      "last_synced": "2025-07-23T21:49:43.037920Z",
+      "status": "updated",
+      "wc_product_id": 283,
+      "wc_sku": "SVR_240X120_EVEREST"
     },
     {
       "erp_item_code": "SVR_240X120_HIGHLANDS",
-      "wc_product_id": 284,
-      "wc_sku": "SVR_240X120_HIGHLANDS",
-      "status": "matched",
-      "last_synced": null,
-      "last_price": null,
-      "last_image_media_id": null,
       "last_image_filename": null,
-      "last_image_size": null
+      "last_image_media_id": null,
+      "last_image_size": null,
+      "last_price": 3566.16,
+      "last_synced": "2025-07-23T21:49:48.565876Z",
+      "status": "updated",
+      "wc_product_id": 284,
+      "wc_sku": "SVR_240X120_HIGHLANDS"
     },
     {
       "erp_item_code": "SVR_240X120_HIMALAYAS",
-      "wc_product_id": 285,
-      "wc_sku": "SVR_240X120_HIMALAYAS",
-      "status": "matched",
-      "last_synced": null,
-      "last_price": null,
-      "last_image_media_id": null,
       "last_image_filename": null,
-      "last_image_size": null
+      "last_image_media_id": null,
+      "last_image_size": null,
+      "last_price": 3566.16,
+      "last_synced": "2025-07-23T21:49:54.596746Z",
+      "status": "updated",
+      "wc_product_id": 285,
+      "wc_sku": "SVR_240X120_HIMALAYAS"
     },
     {
       "erp_item_code": "SVR_240X120_MOUNTCAMEROON",
-      "wc_product_id": 286,
-      "wc_sku": "SVR_240X120_MOUNTCAMEROON",
-      "status": "matched",
-      "last_synced": null,
-      "last_price": null,
-      "last_image_media_id": null,
       "last_image_filename": null,
-      "last_image_size": null
+      "last_image_media_id": null,
+      "last_image_size": null,
+      "last_price": 3566.16,
+      "last_synced": "2025-07-23T21:50:01.980739Z",
+      "status": "updated",
+      "wc_product_id": 286,
+      "wc_sku": "SVR_240X120_MOUNTCAMEROON"
     },
     {
       "erp_item_code": "SVR_240X120_MOUNTCOOK",
-      "wc_product_id": 287,
-      "wc_sku": "SVR_240X120_MOUNTCOOK",
-      "status": "matched",
-      "last_synced": null,
-      "last_price": null,
-      "last_image_media_id": null,
       "last_image_filename": null,
-      "last_image_size": null
+      "last_image_media_id": null,
+      "last_image_size": null,
+      "last_price": 3566.16,
+      "last_synced": "2025-07-23T21:50:07.923138Z",
+      "status": "updated",
+      "wc_product_id": 287,
+      "wc_sku": "SVR_240X120_MOUNTCOOK"
     },
     {
       "erp_item_code": "SVR_240X120_SIERRA",
-      "wc_product_id": 288,
-      "wc_sku": "SVR_240X120_SIERRA",
-      "status": "matched",
-      "last_synced": null,
-      "last_price": null,
-      "last_image_media_id": null,
       "last_image_filename": null,
-      "last_image_size": null
+      "last_image_media_id": null,
+      "last_image_size": null,
+      "last_price": 3566.16,
+      "last_synced": "2025-07-23T21:50:13.861695Z",
+      "status": "updated",
+      "wc_product_id": 288,
+      "wc_sku": "SVR_240X120_SIERRA"
     },
     {
       "erp_item_code": "TSL_240X120_ANDES",
-      "wc_product_id": 289,
-      "wc_sku": "TSL_240X120_ANDES",
-      "status": "matched",
-      "last_synced": null,
-      "last_price": null,
-      "last_image_media_id": null,
       "last_image_filename": null,
-      "last_image_size": null
+      "last_image_media_id": null,
+      "last_image_size": null,
+      "last_price": 3744.468,
+      "last_synced": "2025-07-23T21:50:19.696157Z",
+      "status": "updated",
+      "wc_product_id": 289,
+      "wc_sku": "TSL_240X120_ANDES"
     },
     {
       "erp_item_code": "TSL_240X120_DRAKENSBERG",
-      "wc_product_id": 290,
-      "wc_sku": "TSL_240X120_DRAKENSBERG",
-      "status": "matched",
-      "last_synced": null,
-      "last_price": null,
-      "last_image_media_id": null,
       "last_image_filename": null,
-      "last_image_size": null
+      "last_image_media_id": null,
+      "last_image_size": null,
+      "last_price": 3744.468,
+      "last_synced": "2025-07-23T23:33:59.755263Z",
+      "status": "created",
+      "wc_product_id": 977,
+      "wc_sku": "TSL_240X120_DRAKENSBERG"
     },
     {
       "erp_item_code": "TSL_240X120_EVEREST",
-      "wc_product_id": 291,
-      "wc_sku": "TSL_240X120_EVEREST",
-      "status": "matched",
-      "last_synced": null,
-      "last_price": null,
-      "last_image_media_id": null,
       "last_image_filename": null,
-      "last_image_size": null
+      "last_image_media_id": null,
+      "last_image_size": null,
+      "last_price": 3744.468,
+      "last_synced": "2025-07-23T23:34:23.721311Z",
+      "status": "created",
+      "wc_product_id": 979,
+      "wc_sku": "TSL_240X120_EVEREST"
     },
     {
       "erp_item_code": "TSL_240X120_HIGHLANDS",
-      "wc_product_id": 292,
-      "wc_sku": "TSL_240X120_HIGHLANDS",
-      "status": "matched",
-      "last_synced": null,
-      "last_price": null,
-      "last_image_media_id": null,
       "last_image_filename": null,
-      "last_image_size": null
+      "last_image_media_id": null,
+      "last_image_size": null,
+      "last_price": 3744.468,
+      "last_synced": "2025-07-23T21:50:37.923889Z",
+      "status": "unmatched",
+      "wc_product_id": null,
+      "wc_sku": null
     },
     {
       "erp_item_code": "TSL_240X120_HIMALAYAS",
-      "wc_product_id": 293,
-      "wc_sku": "TSL_240X120_HIMALAYAS",
-      "status": "matched",
-      "last_synced": null,
-      "last_price": null,
-      "last_image_media_id": null,
       "last_image_filename": null,
-      "last_image_size": null
+      "last_image_media_id": null,
+      "last_image_size": null,
+      "last_price": 3744.468,
+      "last_synced": "2025-07-23T21:50:43.756753Z",
+      "status": "unmatched",
+      "wc_product_id": null,
+      "wc_sku": null
     }
   ],
-  "overrides": []
+  "generated_at": "2025-07-23T23:35:35Z",
+  "images": {
+    "GLU_35S": [
+      {
+        "erp_url": "https://records.techniclad.co.za/files/SOUDAL Multibond SMX35.png",
+        "filename": "SOUDAL Multibond SMX35.png",
+        "position": 0,
+        "sha256": "7e1a571dfade6d8494fedc873e03615f585547039af698e5c99debe0dc332ac0",
+        "updated_at": "2025-07-23T21:45:59Z",
+        "woo_media_id": 905
+      }
+    ],
+    "MST_120X60_ANDES": [],
+    "MST_120X60_DRAKENSBERG": [
+      {
+        "erp_url": "https://records.techniclad.co.za/files/LiuLu ID 1.JPG",
+        "filename": "LiuLu ID 1.JPG",
+        "position": 0,
+        "sha256": "68a9c261cc29844b41e6e8b81403815be1a27536ecfdf80cd08adb39643ae677",
+        "updated_at": "2025-07-23T21:46:09Z",
+        "woo_media_id": 951
+      }
+    ],
+    "MST_120X60_EVEREST": [
+      {
+        "erp_url": "https://records.techniclad.co.za/private/files/2023-02 (4510) Everest Sheet.jpg",
+        "filename": "2023-02 (4510) Everest Sheet.jpg",
+        "position": 0,
+        "sha256": "765316b08bb9ed6163af16f272dc2c5dfbf2b406bbb522d2e86bf7dc5a4b0f01",
+        "updated_at": "2025-07-23T21:46:18Z",
+        "woo_media_id": 907
+      }
+    ],
+    "MST_120X60_HIGHLANDS": [
+      {
+        "erp_url": "https://records.techniclad.co.za/private/files/2023-02 (4502) The Highlands Sheet.jpg",
+        "filename": "2023-02 (4502) The Highlands Sheet.jpg",
+        "position": 0,
+        "sha256": "d04e515c486d0aa46ded8b4b285b278194bbc563246b17426302fe8bc55b3a46",
+        "updated_at": "2025-07-23T21:46:24Z",
+        "woo_media_id": 908
+      }
+    ],
+    "MST_120X60_HIMALAYAS": [
+      {
+        "erp_url": "https://records.techniclad.co.za/private/files/2023-02 (4514) Himalayas Sheet.jpg",
+        "filename": "2023-02 (4514) Himalayas Sheet.jpg",
+        "position": 0,
+        "sha256": "d2ae22a4e77a92d470cffbd7a4f597a5a00e121182e1f0128c3944ed9831de16",
+        "updated_at": "2025-07-23T21:46:31Z",
+        "woo_media_id": 909
+      }
+    ],
+    "PST_60X15_ALPES": [
+      {
+        "erp_url": "https://records.techniclad.co.za/private/files/2023-02 (4788) The Alps Tiles.jpg",
+        "filename": "2023-02 (4788) The Alps Tiles.jpg",
+        "position": 0,
+        "sha256": "f3d58842f878cb959b2ec207fb0b5d7ebfd19312bdc071086f490844d84bfed8",
+        "updated_at": "2025-07-23T21:46:36Z",
+        "woo_media_id": 910
+      }
+    ],
+    "PST_60X15_ANDES": [
+      {
+        "erp_url": "https://records.techniclad.co.za/private/files/2023-02 (4778) Andes Tiles.jpg",
+        "filename": "2023-02 (4778) Andes Tiles.jpg",
+        "position": 0,
+        "sha256": "c2927ce073c946c5bf1223e9f4bc9a9669517167b2b475d325ccba1eab55e1c5",
+        "updated_at": "2025-07-23T21:46:42Z",
+        "woo_media_id": 911
+      }
+    ],
+    "PST_60X15_ATLAS": [
+      {
+        "erp_url": "https://records.techniclad.co.za/private/files/2023-02 (4656) Atlas Tiles.jpg",
+        "filename": "2023-02 (4656) Atlas Tiles.jpg",
+        "position": 0,
+        "sha256": "901851fb2b42e0b095f8d75397dcd4d65c258e7fc039ca6033cd278342027695",
+        "updated_at": "2025-07-23T21:46:47Z",
+        "woo_media_id": 912
+      }
+    ],
+    "PST_60X15_CERES": [
+      {
+        "erp_url": "https://records.techniclad.co.za/private/files/2023-02 (4739) Ceres Tiles.jpg",
+        "filename": "2023-02 (4739) Ceres Tiles.jpg",
+        "position": 0,
+        "sha256": "de94126a7c591bc5f37753807114256df70f6f0dd444a7701c29997df4e6ab2a",
+        "updated_at": "2025-07-23T21:46:53Z",
+        "woo_media_id": 913
+      }
+    ],
+    "PST_60X15_DRAKENSBERG": [
+      {
+        "erp_url": "https://records.techniclad.co.za/private/files/2023-02 (4753) Drakensberg Tiles.jpg",
+        "filename": "2023-02 (4753) Drakensberg Tiles.jpg",
+        "position": 0,
+        "sha256": "c2fddb2dd264bfe3638892c888af5f24d5bc95b79d7faceafd56ac5799932f8c",
+        "updated_at": "2025-07-23T21:46:59Z",
+        "woo_media_id": 914
+      }
+    ],
+    "PST_60X15_EVEREST": [
+      {
+        "erp_url": "https://records.techniclad.co.za/private/files/2023-02 (4763) Everest Tiles.jpg",
+        "filename": "2023-02 (4763) Everest Tiles.jpg",
+        "position": 0,
+        "sha256": "dda27ea4b0f96d8cffe1fb4941375be4e9865052d755b76ffd7a33f552fda789",
+        "updated_at": "2025-07-23T21:47:05Z",
+        "woo_media_id": 915
+      }
+    ],
+    "PST_60X15_HIGHLANDS": [
+      {
+        "erp_url": "https://records.techniclad.co.za/private/files/2023-02 (4767) The Highlands Tiles.jpg",
+        "filename": "2023-02 (4767) The Highlands Tiles.jpg",
+        "position": 0,
+        "sha256": "a6fb00e2527d3ab1a519dee31197e807f8a12bb3b4ea072c902a91ba991727c9",
+        "updated_at": "2025-07-23T21:47:11Z",
+        "woo_media_id": 916
+      }
+    ],
+    "PST_60X15_HIMALAYAS": [
+      {
+        "erp_url": "https://records.techniclad.co.za/private/files/2023-02 (4773) Himalayas Tiles.jpg",
+        "filename": "2023-02 (4773) Himalayas Tiles.jpg",
+        "position": 0,
+        "sha256": "f5e46b4100f8a327a902ae4c5981ba6cc1d8d8781f03e03bb68cfe5c18f477ef",
+        "updated_at": "2025-07-23T21:47:16Z",
+        "woo_media_id": 917
+      }
+    ],
+    "PST_60X15_MOUNTFUJI": [
+      {
+        "erp_url": "https://records.techniclad.co.za/private/files/2023-02 (4749) Mount Fuji Tiles.jpg",
+        "filename": "2023-02 (4749) Mount Fuji Tiles.jpg",
+        "position": 0,
+        "sha256": "4eba8a33f5d3d1cb9dda89f815ca683d0db6914265dce5157a6c889e37821e77",
+        "updated_at": "2025-07-23T21:47:28Z",
+        "woo_media_id": 918
+      }
+    ],
+    "PST_60X15_NEVADA": [
+      {
+        "erp_url": "https://records.techniclad.co.za/private/files/2023-02 (4785) Navada Tiles.jpg",
+        "filename": "2023-02 (4785) Navada Tiles.jpg",
+        "position": 0,
+        "sha256": "2913dcd1ad10e54f7dca195102b5c873f67a1f8872b598bf411369a21b4c9950",
+        "updated_at": "2025-07-23T21:47:34Z",
+        "woo_media_id": 919
+      }
+    ],
+    "PST_60X15_ROCKYMOUNTAIN": [
+      {
+        "erp_url": "https://records.techniclad.co.za/private/files/2023-02 (4793) Rocky Mountain Tiles.jpg",
+        "filename": "2023-02 (4793) Rocky Mountain Tiles.jpg",
+        "position": 0,
+        "sha256": "cbb858c328c47d3679448c2ff5ae657c454f6a4ff6eeae5acb7aab6162273a86",
+        "updated_at": "2025-07-23T21:47:39Z",
+        "woo_media_id": 920
+      }
+    ],
+    "SLR_1S01": [
+      {
+        "erp_url": "https://records.techniclad.co.za/files/TFC 1S01 Invisible Sealer 1 L.png",
+        "filename": "TFC 1S01 Invisible Sealer 1 L.png",
+        "position": 0,
+        "sha256": "7b45fdad1d90df0ea2c1344ba4c1a85e4eda8596a14a1c769603a6e3e53c44c4",
+        "updated_at": "2025-07-23T21:47:45Z",
+        "woo_media_id": 921
+      }
+    ],
+    "SVR_120X60_ALASKA": [
+      {
+        "erp_url": "https://records.techniclad.co.za/private/files/2023-02 (4536) Alaska Sheet.jpg",
+        "filename": "2023-02 (4536) Alaska Sheet.jpg",
+        "position": 0,
+        "sha256": "2b4cdca5bb3813f84a2d50f5c9fc0ed19c463e34d9bea5d91b950c7991a4cbc2",
+        "updated_at": "2025-07-23T21:47:52Z",
+        "woo_media_id": 922
+      }
+    ],
+    "SVR_120X60_ANDES": [
+      {
+        "erp_url": "https://records.techniclad.co.za/private/files/2023-02 (4522) Andes Sheet.jpg",
+        "filename": "2023-02 (4522) Andes Sheet.jpg",
+        "position": 0,
+        "sha256": "06f2c811f88801360723905f6e4fa6bbcd2228aeed0a30ea880d79f3523b533f",
+        "updated_at": "2025-07-23T21:47:57Z",
+        "woo_media_id": 923
+      }
+    ],
+    "SVR_120X60_ATLAS": [
+      {
+        "erp_url": "https://records.techniclad.co.za/private/files/2023-02 (4533) Atlas Sheet.jpg",
+        "filename": "2023-02 (4533) Atlas Sheet.jpg",
+        "position": 0,
+        "sha256": "bc7197167ff316b2789da69ddcaca75595f25da87a347862c3a17e2602e07f01",
+        "updated_at": "2025-07-23T21:48:02Z",
+        "woo_media_id": 924
+      }
+    ],
+    "SVR_120X60_CASCADE": [
+      {
+        "erp_url": "https://records.techniclad.co.za/private/files/2023-02 (4517) Cascade Sheet.jpg",
+        "filename": "2023-02 (4517) Cascade Sheet.jpg",
+        "position": 0,
+        "sha256": "95e6e2ae4b3f48dd9569b5e7e3a57689066d06c4d7769769a85acf0d1686565a",
+        "updated_at": "2025-07-23T21:48:08Z",
+        "woo_media_id": 925
+      }
+    ],
+    "SVR_120X60_DOLOMITES": [
+      {
+        "erp_url": "https://records.techniclad.co.za/private/files/2023-02 (4496) The Dolomites Sheet.jpg",
+        "filename": "2023-02 (4496) The Dolomites Sheet.jpg",
+        "position": 0,
+        "sha256": "ad772c7e0388cad7856bb336b20b5cafae7d3daa23bf5bc2f6e9b97bced52051",
+        "updated_at": "2025-07-23T21:48:13Z",
+        "woo_media_id": 926
+      }
+    ],
+    "SVR_120X60_DRAKENSBERG": [
+      {
+        "erp_url": "https://records.techniclad.co.za/private/files/2023-02 (4494) Drakensberg Sheet.jpg",
+        "filename": "2023-02 (4494) Drakensberg Sheet.jpg",
+        "position": 0,
+        "sha256": "812e5237b7e673f11865d78b0ee209358ca49c8cd06737b00048f575420c276d",
+        "updated_at": "2025-07-23T21:48:19Z",
+        "woo_media_id": 952
+      }
+    ],
+    "SVR_120X60_EVEREST": [
+      {
+        "erp_url": "https://records.techniclad.co.za/private/files/2023-02 (4510) Everest Sheet.jpg",
+        "filename": "2023-02 (4510) Everest Sheet.jpg",
+        "position": 0,
+        "sha256": "765316b08bb9ed6163af16f272dc2c5dfbf2b406bbb522d2e86bf7dc5a4b0f01",
+        "updated_at": "2025-07-23T21:48:25Z",
+        "woo_media_id": 927
+      }
+    ],
+    "SVR_120X60_HIGHLANDS": [
+      {
+        "erp_url": "https://records.techniclad.co.za/private/files/2023-02 (4502) The Highlands Sheet.jpg",
+        "filename": "2023-02 (4502) The Highlands Sheet.jpg",
+        "position": 0,
+        "sha256": "d04e515c486d0aa46ded8b4b285b278194bbc563246b17426302fe8bc55b3a46",
+        "updated_at": "2025-07-23T21:48:30Z",
+        "woo_media_id": 928
+      }
+    ],
+    "SVR_120X60_HIMALAYAS": [
+      {
+        "erp_url": "https://records.techniclad.co.za/private/files/2023-02 (4514) Himalayas Sheet.jpg",
+        "filename": "2023-02 (4514) Himalayas Sheet.jpg",
+        "position": 0,
+        "sha256": "d2ae22a4e77a92d470cffbd7a4f597a5a00e121182e1f0128c3944ed9831de16",
+        "updated_at": "2025-07-23T21:48:35Z",
+        "woo_media_id": 929
+      }
+    ],
+    "SVR_120X60_MOUNTCAMEROON": [
+      {
+        "erp_url": "https://records.techniclad.co.za/private/files/2023-02 (4519) Mount Cameroon Sheet.jpg",
+        "filename": "2023-02 (4519) Mount Cameroon Sheet.jpg",
+        "position": 0,
+        "sha256": "04aee60a54bf9b79efd5ba42f1c82d2b93325a326b078e23f99563de0eb0b8b8",
+        "updated_at": "2025-07-23T21:48:42Z",
+        "woo_media_id": 930
+      }
+    ],
+    "SVR_120X60_MOUNTCOOK": [
+      {
+        "erp_url": "https://records.techniclad.co.za/private/files/2023-02 (4594) Mount Cook.jpg",
+        "filename": "2023-02 (4594) Mount Cook.jpg",
+        "position": 0,
+        "sha256": "b23b861a31d4ca240dae7a644a641a56aaaec52e6d6339fbb82b9647a4ecf651",
+        "updated_at": "2025-07-23T21:48:48Z",
+        "woo_media_id": 931
+      }
+    ],
+    "SVR_120X60_SIERRA": [
+      {
+        "erp_url": "https://records.techniclad.co.za/private/files/2023-02 (4525) Sierra Sheet.jpg",
+        "filename": "2023-02 (4525) Sierra Sheet.jpg",
+        "position": 0,
+        "sha256": "bec7be35dfe9cb8afa12cc4ac75490562159fb9b54a61386f9725af89b485467",
+        "updated_at": "2025-07-23T21:48:54Z",
+        "woo_media_id": 932
+      }
+    ],
+    "SVR_240X120_ALASKA": [
+      {
+        "erp_url": "https://records.techniclad.co.za/private/files/2023-02 (4536) Alaska Sheet.jpg",
+        "filename": "2023-02 (4536) Alaska Sheet.jpg",
+        "position": 0,
+        "sha256": "2b4cdca5bb3813f84a2d50f5c9fc0ed19c463e34d9bea5d91b950c7991a4cbc2",
+        "updated_at": "2025-07-23T21:48:59Z",
+        "woo_media_id": 933
+      }
+    ],
+    "SVR_240X120_ANDES": [
+      {
+        "erp_url": "https://records.techniclad.co.za/private/files/2023-02 (4522) Andes Sheet.jpg",
+        "filename": "2023-02 (4522) Andes Sheet.jpg",
+        "position": 0,
+        "sha256": "06f2c811f88801360723905f6e4fa6bbcd2228aeed0a30ea880d79f3523b533f",
+        "updated_at": "2025-07-23T21:49:05Z",
+        "woo_media_id": 934
+      }
+    ],
+    "SVR_240X120_ATLAS": [
+      {
+        "erp_url": "https://records.techniclad.co.za/private/files/2023-02 (4533) Atlas Sheet.jpg",
+        "filename": "2023-02 (4533) Atlas Sheet.jpg",
+        "position": 0,
+        "sha256": "bc7197167ff316b2789da69ddcaca75595f25da87a347862c3a17e2602e07f01",
+        "updated_at": "2025-07-23T21:49:11Z",
+        "woo_media_id": 935
+      }
+    ],
+    "SVR_240X120_CASCADE": [
+      {
+        "erp_url": "https://records.techniclad.co.za/private/files/2023-02 (4517) Cascade Sheet.jpg",
+        "filename": "2023-02 (4517) Cascade Sheet.jpg",
+        "position": 0,
+        "sha256": "95e6e2ae4b3f48dd9569b5e7e3a57689066d06c4d7769769a85acf0d1686565a",
+        "updated_at": "2025-07-23T21:49:16Z",
+        "woo_media_id": 936
+      }
+    ],
+    "SVR_240X120_DOLOMITES": [
+      {
+        "erp_url": "https://records.techniclad.co.za/private/files/2023-02 (4496) The Dolomites Sheet.jpg",
+        "filename": "2023-02 (4496) The Dolomites Sheet.jpg",
+        "position": 0,
+        "sha256": "ad772c7e0388cad7856bb336b20b5cafae7d3daa23bf5bc2f6e9b97bced52051",
+        "updated_at": "2025-07-23T21:49:28Z",
+        "woo_media_id": 937
+      }
+    ],
+    "SVR_240X120_DRAKENSBERG": [
+      {
+        "erp_url": "https://records.techniclad.co.za/private/files/2023-02 (4494) Drakensberg Sheet.jpg",
+        "filename": "2023-02 (4494) Drakensberg Sheet.jpg",
+        "position": 0,
+        "sha256": "812e5237b7e673f11865d78b0ee209358ca49c8cd06737b00048f575420c276d",
+        "updated_at": "2025-07-23T21:49:34Z",
+        "woo_media_id": 938
+      }
+    ],
+    "SVR_240X120_EVEREST": [
+      {
+        "erp_url": "https://records.techniclad.co.za/private/files/2023-02 (4510) Everest Sheet.jpg",
+        "filename": "2023-02 (4510) Everest Sheet.jpg",
+        "position": 0,
+        "sha256": "765316b08bb9ed6163af16f272dc2c5dfbf2b406bbb522d2e86bf7dc5a4b0f01",
+        "updated_at": "2025-07-23T21:49:39Z",
+        "woo_media_id": 939
+      }
+    ],
+    "SVR_240X120_HIGHLANDS": [
+      {
+        "erp_url": "https://records.techniclad.co.za/private/files/2023-02 (4502) The Highlands Sheet.jpg",
+        "filename": "2023-02 (4502) The Highlands Sheet.jpg",
+        "position": 0,
+        "sha256": "d04e515c486d0aa46ded8b4b285b278194bbc563246b17426302fe8bc55b3a46",
+        "updated_at": "2025-07-23T21:49:45Z",
+        "woo_media_id": 940
+      }
+    ],
+    "SVR_240X120_HIMALAYAS": [
+      {
+        "erp_url": "https://records.techniclad.co.za/private/files/2023-02 (4514) Himalayas Sheet.jpg",
+        "filename": "2023-02 (4514) Himalayas Sheet.jpg",
+        "position": 0,
+        "sha256": "d2ae22a4e77a92d470cffbd7a4f597a5a00e121182e1f0128c3944ed9831de16",
+        "updated_at": "2025-07-23T21:49:52Z",
+        "woo_media_id": 941
+      }
+    ],
+    "SVR_240X120_MOUNTCAMEROON": [
+      {
+        "erp_url": "https://records.techniclad.co.za/private/files/2023-02 (4519) Mount Cameroon Sheet.jpg",
+        "filename": "2023-02 (4519) Mount Cameroon Sheet.jpg",
+        "position": 0,
+        "sha256": "04aee60a54bf9b79efd5ba42f1c82d2b93325a326b078e23f99563de0eb0b8b8",
+        "updated_at": "2025-07-23T21:49:57Z",
+        "woo_media_id": 942
+      }
+    ],
+    "SVR_240X120_MOUNTCOOK": [
+      {
+        "erp_url": "https://records.techniclad.co.za/private/files/2023-02 (4594) Mount Cook.jpg",
+        "filename": "2023-02 (4594) Mount Cook.jpg",
+        "position": 0,
+        "sha256": "b23b861a31d4ca240dae7a644a641a56aaaec52e6d6339fbb82b9647a4ecf651",
+        "updated_at": "2025-07-23T21:50:05Z",
+        "woo_media_id": 943
+      }
+    ],
+    "SVR_240X120_SIERRA": [
+      {
+        "erp_url": "https://records.techniclad.co.za/private/files/2023-02 (4525) Sierra Sheet.jpg",
+        "filename": "2023-02 (4525) Sierra Sheet.jpg",
+        "position": 0,
+        "sha256": "bec7be35dfe9cb8afa12cc4ac75490562159fb9b54a61386f9725af89b485467",
+        "updated_at": "2025-07-23T21:50:11Z",
+        "woo_media_id": 944
+      }
+    ],
+    "TSL_240X120_ANDES": [
+      {
+        "erp_url": "https://records.techniclad.co.za/private/files/2023-02 (4522) Andes Sheet.jpg",
+        "filename": "2023-02 (4522) Andes Sheet.jpg",
+        "position": 0,
+        "sha256": "06f2c811f88801360723905f6e4fa6bbcd2228aeed0a30ea880d79f3523b533f",
+        "updated_at": "2025-07-23T21:50:16Z",
+        "woo_media_id": 945
+      }
+    ],
+    "TSL_240X120_DRAKENSBERG": [
+      {
+        "erp_url": "https://records.techniclad.co.za/private/files/2023-02 (4494) Drakensberg Sheet.jpg",
+        "filename": "2023-02 (4494) Drakensberg Sheet.jpg",
+        "position": 0,
+        "sha256": "812e5237b7e673f11865d78b0ee209358ca49c8cd06737b00048f575420c276d",
+        "updated_at": "2025-07-23T23:34:07Z",
+        "woo_media_id": 978
+      }
+    ],
+    "TSL_240X120_EVEREST": [
+      {
+        "erp_url": "https://records.techniclad.co.za/private/files/2023-02 (4510) Everest Sheet.jpg",
+        "filename": "2023-02 (4510) Everest Sheet.jpg",
+        "position": 0,
+        "sha256": "765316b08bb9ed6163af16f272dc2c5dfbf2b406bbb522d2e86bf7dc5a4b0f01",
+        "updated_at": "2025-07-23T23:34:32Z",
+        "woo_media_id": 980
+      }
+    ],
+    "TSL_240X120_HIGHLANDS": [
+      {
+        "erp_url": "https://records.techniclad.co.za/private/files/2023-02 (4502) The Highlands Sheet.jpg",
+        "filename": "2023-02 (4502) The Highlands Sheet.jpg",
+        "position": 0,
+        "sha256": "d04e515c486d0aa46ded8b4b285b278194bbc563246b17426302fe8bc55b3a46",
+        "updated_at": "2025-07-23T21:50:34Z",
+        "woo_media_id": 948
+      }
+    ],
+    "TSL_240X120_HIMALAYAS": [
+      {
+        "erp_url": "https://records.techniclad.co.za/private/files/2023-02 (4514) Himalayas Sheet.jpg",
+        "filename": "2023-02 (4514) Himalayas Sheet.jpg",
+        "position": 0,
+        "sha256": "d2ae22a4e77a92d470cffbd7a4f597a5a00e121182e1f0128c3944ed9831de16",
+        "updated_at": "2025-07-23T21:50:40Z",
+        "woo_media_id": 949
+      }
+    ]
+  },
+  "overrides": [],
+  "schema_version": 3
 }

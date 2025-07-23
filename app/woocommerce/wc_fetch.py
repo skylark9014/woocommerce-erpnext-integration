@@ -3,25 +3,22 @@
 #Fetches products from WooCommerce via the REST API.
 #=================================
 
-from app.woocommerce.woocommerce_api import wc_get
-def get_wc_products(per_page: int = 100) -> list:
-    """
-    Fetches *all* WooCommerce products, paging until none are left.
-    :param per_page: how many products to fetch per page (max 100)
-    :return: list of product dicts
-    """
-    all_products = []
-    page = 1
+# app/woocommerce/wc_fetch.py
+from typing import List, Dict, Any, Optional
+from app.woocommerce.woocommerce_api import wc_get  # async
 
+# Pull all Woo products (paged)
+async def get_wc_products(per_page: int = 100) -> List[Dict[str, Any]]:
+    products: List[Dict[str, Any]] = []
+    page = 1
     while True:
-        batch = wc_get(
-            "products",
-            params={"page": page, "per_page": per_page}
-        )
+        batch = await wc_get("products", {"per_page": per_page, "page": page})
         if not batch:
             break
-        all_products.extend(batch)
+        products.extend(batch)
+        if len(batch) < per_page:
+            break
         page += 1
+    return products
 
-    return all_products
-
+# Add more helpers here and keep them async if they call wc_get/wc_post/etc.
