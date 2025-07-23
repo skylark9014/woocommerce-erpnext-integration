@@ -35,16 +35,19 @@ services:
       WP_APP_PASSWORD: Arrmll5cCxaf3YXlWuM30trr
       WP_USERNAME: techniclad
 
-    command: ["uvicorn", "app.main_app:app", "--host", "0.0.0.0", "--port", "8000"]
+    command: [ "uvicorn", "app.main_app:app", "--host", "0.0.0.0", "--port", "8000" ]
 
     ports:
       - "8000:8000"
 
     labels:
       - "traefik.enable=true"
+      # Router
       - "traefik.http.routers.admin.rule=Host(`records.techniclad.co.za`) && PathPrefix(`/admin`)"
       - "traefik.http.routers.admin.entrypoints=websecure"
       - "traefik.http.routers.admin.tls.certresolver=main-resolver"
+      # Service port
+      - "traefik.http.services.admin-svc.loadbalancer.server.port=8000"
 
     networks:
       - frappe_default
@@ -53,4 +56,3 @@ services:
 networks:
   frappe_default:
     external: true
-
