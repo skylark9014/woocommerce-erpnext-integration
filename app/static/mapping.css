@@ -67,15 +67,15 @@ body {
 }
 
 .tw-btn-primary {
-  background: var(--indigo-600);
+  background: var(--sky-600);
 }
 
 .tw-btn-primary:hover {
-  background: var(--indigo-500);
+  background: var(--sky-500);
 }
 
 .tw-btn-primary:focus-visible {
-  outline: 2px solid var(--indigo-600);
+  outline: 2px solid var(--sky-600);
   outline-offset: 2px;
 }
 

@@ -1,4 +1,11 @@
-import json, os, time, errno, fcntl, tempfile, shutil
+# app/mapping/mapping_store.py
+
+import json
+import os
+import time
+import errno
+import tempfile
+import shutil
 from json import JSONDecodeError
 from typing import Tuple, List, Dict, Any, Optional
 from datetime import datetime
@@ -9,7 +16,7 @@ SAVE_RETRY_DELAY_SECS = 0.15  # 150 ms
 BACKUP_SUFFIX = ".corrupt.bak"
 
 
-def now_iso():
+def now_iso() -> str:
     return datetime.utcnow().replace(microsecond=0).isoformat() + "Z"
 
 
@@ -54,7 +61,10 @@ def _try_repair_json(text: str) -> Optional[dict]:
     return None
 
 
-def load_mapping_raw(path) -> dict | None:
+def load_mapping_raw(path: str) -> dict | None:
+    """
+    Load the raw JSON mapping file, attempting simple repairs on JSON errors.
+    """
     if not os.path.exists(path):
         return None
 
@@ -64,10 +74,9 @@ def load_mapping_raw(path) -> dict | None:
     try:
         return json.loads(data_txt)
     except JSONDecodeError:
-        # Attempt auto-fix
         repaired = _try_repair_json(data_txt)
         if repaired is not None:
-            # Backup bad file, then overwrite with repaired version
+            # Backup the bad file
             try:
                 shutil.copy2(path, path + BACKUP_SUFFIX)
             except Exception:
@@ -80,11 +89,10 @@ def load_mapping_raw(path) -> dict | None:
 
 def migrate_if_needed(data: dict) -> dict:
     """
-    Ensure data has keys: auto, overrides, images.
-    Move from older schema to SCHEMA_VERSION.
+    Ensure data has keys: auto, overrides, images, and the correct schema_version.
     """
     if "schema_version" not in data:
-        # Assume oldest flat list
+        # Assume oldest flat-list format
         data = {
             "schema_version": 2,
             "generated_at": now_iso(),
@@ -92,32 +100,49 @@ def migrate_if_needed(data: dict) -> dict:
             "overrides": []
         }
 
-    if data["schema_version"] < 3:
-        # Add images dict
+    if data.get("schema_version", 0) < SCHEMA_VERSION:
         data.setdefault("images", {})
-        data["schema_version"] = 3
-
-    # future migrations here...
+        data["schema_version"] = SCHEMA_VERSION
 
     return data
 
 
 def _atomic_write(path: str, payload: dict):
-    # POSIX-safe write with temp file + rename + optional fcntl lock
+    """
+    POSIX-safe write: write to a temp file, chown it to match the
+    directory owner (to avoid root-owned files on bind mounts), then rename.
+    """
     directory = os.path.dirname(path) or "."
+    # Get directory ownership
+    try:
+        st = os.stat(directory)
+        dir_uid, dir_gid = st.st_uid, st.st_gid
+    except Exception:
+        dir_uid = dir_gid = None
+
     fd, tmp_path = tempfile.mkstemp(prefix=".tmp_", dir=directory)
     try:
         with os.fdopen(fd, "w", encoding="utf-8") as tmp_file:
             json.dump(payload, tmp_file, indent=2, ensure_ascii=False)
             tmp_file.flush()
             os.fsync(tmp_file.fileno())
+        # Preserve ownership if possible
+        if dir_uid is not None and dir_gid is not None:
+            try:
+                os.chown(tmp_path, dir_uid, dir_gid)
+            except PermissionError:
+                pass
+        # Atomically replace
         os.replace(tmp_path, path)
     finally:
         if os.path.exists(tmp_path):
             os.unlink(tmp_path)
 
 
-def save_mapping(path, auto_rows, overrides, images):
+def save_mapping(path: str, auto_rows: List[dict], overrides: List[dict], images: Dict[str, Any]):
+    """
+    Save the full mapping payload with retries for transient filesystem errors.
+    """
     payload = {
         "schema_version": SCHEMA_VERSION,
         "generated_at": now_iso(),
@@ -126,7 +151,6 @@ def save_mapping(path, auto_rows, overrides, images):
         "images": images,
     }
 
-    # simple retry loop for NFS / concurrent access
     for _ in range(SAVE_RETRIES):
         try:
             _atomic_write(path, payload)
@@ -139,7 +163,10 @@ def save_mapping(path, auto_rows, overrides, images):
     raise RuntimeError("Failed to save mapping after retries")
 
 
-def generate_auto_mapping(wc_products, erp_items) -> List[dict]:
+# -----------------------------
+# Auto-mapping generation
+# -----------------------------
+def generate_auto_mapping(wc_products: List[dict], erp_items: List[dict]) -> List[dict]:
     wc_index = {p["sku"]: p for p in wc_products if p.get("sku")}
     rows = []
     for it in erp_items:
@@ -152,7 +179,7 @@ def generate_auto_mapping(wc_products, erp_items) -> List[dict]:
             "status": "matched" if wc else "missing_wc",
             "last_synced": None,
             "last_price": None,
-            # old single-image fields kept for backward-compatibility
+            # legacy single-image fields kept for backward-compatibility
             "last_image_media_id": None,
             "last_image_filename": None,
             "last_image_size": None
@@ -160,7 +187,10 @@ def generate_auto_mapping(wc_products, erp_items) -> List[dict]:
     return rows
 
 
-def apply_overrides(auto_rows, overrides):
+def apply_overrides(auto_rows: List[dict], overrides: List[dict]) -> List[dict]:
+    """
+    Apply any manual overrides (forced WC product IDs) onto the auto_rows.
+    """
     idx = {r["erp_item_code"]: r for r in auto_rows}
     for ov in overrides:
         code = ov.get("erp_item_code")
@@ -176,23 +206,34 @@ def apply_overrides(auto_rows, overrides):
     return auto_rows
 
 
-def build_or_load_mapping(path, wc_products, erp_items) -> Tuple[list, list, dict]:
+def build_or_load_mapping(
+    path: str,
+    wc_products: List[dict],
+    erp_items: List[dict]
+) -> Tuple[List[dict], List[dict], Dict[str, Any]]:
+    """
+    If mapping file exists, load & migrate it; otherwise, generate a fresh one.
+    Returns (auto_rows, overrides, images_map).
+    """
     raw = load_mapping_raw(path)
     if raw:
         raw = migrate_if_needed(raw)
         return raw["auto"], raw["overrides"], raw.get("images", {})
+
     auto_rows = generate_auto_mapping(wc_products, erp_items)
-    overrides = []
-    images = {}
-    save_mapping(path, auto_rows, overrides, images)
-    return auto_rows, overrides, images
+    overrides: List[dict] = []
+    images_map: Dict[str, Any] = {}
+    save_mapping(path, auto_rows, overrides, images_map)
+    return auto_rows, overrides, images_map
 
 
 # -------------------------------------------------
 # Image-map helpers (multi-image support)
 # -------------------------------------------------
-
-def get_images_for_item(images_map: Dict[str, List[Dict[str, Any]]], item_code: str) -> List[Dict[str, Any]]:
+def get_images_for_item(
+    images_map: Dict[str, List[Dict[str, Any]]],
+    item_code: str
+) -> List[Dict[str, Any]]:
     return images_map.get(item_code, [])
 
 
@@ -226,6 +267,10 @@ def upsert_image_mapping(
     })
 
 
-def remove_image_mapping(images_map: Dict[str, List[Dict[str, Any]]], erp_item_code: str, erp_url: str):
+def remove_image_mapping(
+    images_map: Dict[str, List[Dict[str, Any]]],
+    erp_item_code: str,
+    erp_url: str
+):
     lst = images_map.get(erp_item_code, [])
     images_map[erp_item_code] = [r for r in lst if r["erp_url"] != erp_url]

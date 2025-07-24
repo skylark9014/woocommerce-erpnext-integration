@@ -1,3 +1,4 @@
+# app/erp/erp_fetch.py
 # =============================
 # ERPNext API Helpers
 # =============================
@@ -95,8 +96,7 @@ async def fetch_item_images(item_code: str) -> List[Dict[str, Any]]:
       [{url, filename, is_primary, source}]
     - Primary image from Item.image
     - Child table Item Images (item_images)
-    - (Optional) File attachments linked to this Item
-    Adjust if your DocType differs.
+    - File attachments linked to this Item (via File doctype)
     """
     images: List[Dict[str, Any]] = []
 
@@ -127,29 +127,28 @@ async def fetch_item_images(item_code: str) -> List[Dict[str, Any]]:
                 "source": f"item_images[{idx}]"
             })
 
-    # 3) File attachments (optional, uncomment if you use File doctype)
-    # try:
-    #     files = await get_list(
-    #         "File",
-    #         filters=[
-    #             ["attached_to_doctype", "=", "Item"],
-    #             ["attached_to_name", "=", item_code],
-    #             ["is_private", "=", 1],  # include private if needed
-    #         ],
-    #         fields=["file_url", "file_name", "is_private"],
-    #         limit_page_length=100
-    #     )
-    #     for f in files:
-    #         file_url = f.get("file_url")
-    #         if file_url:
-    #             images.append({
-    #                 "url": _absolute_file_url(file_url),
-    #                 "filename": f.get("file_name") or os.path.basename(file_url),
-    #                 "is_primary": False,
-    #                 "source": "File"
-    #             })
-    # except Exception as e:
-    #     print(f"⚠️ File attachment lookup failed for {item_code}: {e}")
+    # 3) File attachments via File doctype
+    try:
+        files = await get_list(
+            "File",
+            filters=[
+                ["File", "attached_to_doctype", "=", "Item"],
+                ["File", "attached_to_name", "=", item_code],
+            ],
+            fields=["file_url", "file_name", "is_private"],
+            limit_page_length=100
+        )
+        for f in files:
+            file_url = f.get("file_url")
+            if file_url:
+                images.append({
+                    "url": _absolute_file_url(file_url),
+                    "filename": f.get("file_name") or os.path.basename(file_url),
+                    "is_primary": False,
+                    "source": "File"
+                })
+    except Exception as e:
+        print(f"⚠️ File attachment lookup failed for {item_code}: {e}")
 
     return images
 
@@ -198,7 +197,7 @@ async def get_default_pricelist(company: str | None = None) -> str:
 
     # 3) First enabled selling Price List
     try:
-        filters: List[List[Any]] = [["selling", "=", 1], ["enabled", "=", 1]]
+        filters = [["selling", "=", 1], ["enabled", "=", 1]]
         if company:
             filters.append(["company", "=", company])
 

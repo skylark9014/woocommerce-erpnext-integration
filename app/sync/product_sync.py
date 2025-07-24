@@ -3,6 +3,7 @@
 # Product Sync Module
 # - Syncs ERPNext items to WooCommerce
 # - Handles create, update, delete, images, mapping persistence
+# - Uses batch endpoints and parallel image uploading for performance
 # =============================
 
 import asyncio
@@ -21,7 +22,7 @@ from app.mapping.mapping_store import (
 )
 from app.sync.product_mapper import map_erp_to_wc_product
 from app.woocommerce.wc_fetch import get_wc_products
-from app.woocommerce.woocommerce_api import wc_create, wc_update, wc_delete
+from app.woocommerce.woocommerce_api import wc_create, wc_delete
 from app.sync.image_sync import sync_item_images
 from app.utils.compare import needs_update
 from app.config import MAPPING_JSON_FILE
@@ -30,7 +31,7 @@ UTCNOW = lambda: datetime.utcnow().isoformat() + "Z"
 
 
 def _index(items: List[dict], key: str) -> Dict[str, dict]:
-    return {i[key]: i for i in items if key in i and i[key]}
+    return {i[key]: i for i in items if i.get(key)}
 
 
 def _row_for(auto_rows: List[dict], code: str) -> dict:
@@ -53,7 +54,7 @@ def _row_for(auto_rows: List[dict], code: str) -> dict:
 
 
 async def _get_prices(codes: List[str], pricelist: str) -> Dict[str, float]:
-    async def one(code):
+    async def one(code: str):
         return code, await get_price_from_pricelist(None, code, pricelist)
     pairs = await asyncio.gather(*[one(c) for c in codes])
     return {c: p for c, p in pairs}
@@ -67,8 +68,9 @@ async def sync_products(pricelist: str | None = None, dry_run: bool = False) -> 
     Full sync:
       1. Load ERP + WC + mapping
       2. Decide create/update/delete
-      3. Perform actions (including image sync)
-      4. Save mapping.json
+      3. Perform batch create/update + parallel image sync
+      4. Delete orphans
+      5. Save mapping
     """
     chosen_pricelist = pricelist or await get_default_pricelist()
 
@@ -90,12 +92,10 @@ async def sync_products(pricelist: str | None = None, dry_run: bool = False) -> 
 
     for row in auto_rows:
         code = row["erp_item_code"]
-        wc_p = wc_idx.get(code)
-        if wc_p is None:
-            if not row.get("wc_product_id"):
-                to_create.append(code)
-            continue
-        to_update.append(code)
+        if code not in wc_idx and not row.get("wc_product_id"):
+            to_create.append(code)
+        elif code in wc_idx:
+            to_update.append(code)
 
     to_delete = [sku for sku in wc_idx if sku not in erp_codes]
 
@@ -105,66 +105,82 @@ async def sync_products(pricelist: str | None = None, dry_run: bool = False) -> 
 
     created, updated, deleted, failed = [], [], [], []
 
-    # CREATE
+    # 4) Batch CREATE + UPDATE
+    create_payloads, update_payloads = [], []
+
+    # build create payloads
     for code in to_create:
         price = prices.get(code)
         if price is None:
             failed.append(code)
             continue
-        try:
-            payload = map_erp_to_wc_product(erp_idx[code], price)
-            wc_p = await wc_create("products", payload)
-            row = _row_for(auto_rows, code)
-            row.update(
-                {
-                    "wc_product_id": wc_p["id"],
-                    "wc_sku": wc_p.get("sku") or code,
-                    "status": "created",
-                    "last_price": price,
-                    "last_synced": UTCNOW(),
-                }
-            )
-            created.append(code)
+        create_payloads.append(map_erp_to_wc_product(erp_idx[code], price))
 
-            if not dry_run:
-                await sync_item_images(code, wc_p["id"], images_map, dry_run=False)
-        except Exception:
-            failed.append(code)
-
-    # UPDATE
+    # build update payloads (only if something changed)
     for code in to_update:
-        wc_p = wc_idx.get(code)
-        if not wc_p:
-            continue  # may have been created above
+        wc_p = wc_idx[code]
         price = prices.get(code)
         if price is None:
             failed.append(code)
             continue
-
         desired = map_erp_to_wc_product(erp_idx[code], price)
+        if needs_update(desired, wc_p):
+            payload = {"id": wc_p["id"], **desired}
+            update_payloads.append(payload)
+
+    # fire the batch request
+    if create_payloads or update_payloads:
+        batch_data: dict = {}
+        if create_payloads:
+            batch_data["create"] = create_payloads
+        if update_payloads:
+            batch_data["update"] = update_payloads
 
         try:
-            if needs_update(desired, wc_p):
-                await wc_update(f"products/{wc_p['id']}", desired)
-                # keep local snapshot consistent so subsequent comparisons don't refire
-                wc_p.update({k: v for k, v in desired.items()
-                             if k in ("name", "regular_price", "description", "short_description")})
-
-            await sync_item_images(code, wc_p["id"], images_map, dry_run=dry_run)
-
-            row = _row_for(auto_rows, code)
-            row.update(
-                {
-                    "status": "updated",
-                    "last_price": price,
+            resp = await wc_create("products/batch", batch_data)
+        except Exception as e:
+            # If batch fails entirely, mark them all as failed
+            failed.extend([r.get("sku") or "" for r in batch_data.get("create", [])])
+            failed.extend([str(p["id"]) for p in batch_data.get("update", [])])
+            resp = {}
+        else:
+            # process created
+            for wc_p in resp.get("create", []):
+                sku = wc_p.get("sku")
+                row = _row_for(auto_rows, sku)
+                row.update({
+                    "wc_product_id": wc_p["id"],
+                    "wc_sku": sku,
+                    "status": "created",
+                    "last_price": prices.get(sku),
                     "last_synced": UTCNOW(),
-                }
-            )
-            updated.append(code)
-        except Exception:
-            failed.append(code)
+                })
+                created.append(sku)
 
-    # DELETE
+            # process updated
+            for wc_p in resp.get("update", []):
+                sku = wc_p.get("sku")
+                row = _row_for(auto_rows, sku)
+                row.update({
+                    "status": "updated",
+                    "last_price": prices.get(sku),
+                    "last_synced": UTCNOW(),
+                })
+                updated.append(sku)
+
+            # 5) Parallel image sync
+            if not dry_run:
+                tasks = []
+                for wc_p in resp.get("create", []):
+                    sku = wc_p.get("sku")
+                    tasks.append(sync_item_images(sku, wc_p["id"], images_map, dry_run=False))
+                for wc_p in resp.get("update", []):
+                    sku = wc_p.get("sku")
+                    tasks.append(sync_item_images(sku, wc_idx[sku]["id"], images_map, dry_run=False))
+                if tasks:
+                    await asyncio.gather(*tasks, return_exceptions=True)
+
+    # 6) DELETE orphans (usually few; individual calls suffice)
     for sku in to_delete:
         wc_p = wc_idx[sku]
         try:
@@ -173,7 +189,7 @@ async def sync_products(pricelist: str | None = None, dry_run: bool = False) -> 
         except Exception:
             failed.append(sku)
 
-    # 4) Save mapping
+    # 7) Save mapping
     if not dry_run:
         save_mapping(MAPPING_JSON_FILE, auto_rows, overrides, images_map)
 

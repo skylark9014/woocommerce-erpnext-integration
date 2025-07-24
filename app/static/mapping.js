@@ -9,12 +9,25 @@ function esc(str) {
   );
 }
 
+// one‑off alerts that auto‑dismiss after 7s
 function showAlert(kind, msg) {
   const box = $("#sync-alert");
   box.className = `alert alert-${kind}`;
-  box.innerHTML = msg; // allow basic <br> for errors list
+  box.innerHTML = msg;
   box.classList.remove("d-none");
   setTimeout(() => box.classList.add("d-none"), 7000);
+}
+
+// persistent callout: stays until closed
+function showCallout(kind, html) {
+  const area = $("#manual-delete-callout-area");
+  if (!area) return;
+  area.innerHTML = `
+    <div class="alert alert-${kind} alert-dismissible" role="alert">
+      ${html}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  `;
 }
 
 function showLoader(text = "Working…") {
@@ -41,7 +54,7 @@ function enableBtn(btn) {
 
 // ------------- state -------------
 let mappingData = { auto: [], overrides: [], images: {} };
-let previewData = { actions: { create: [], update: [], delete: [] }, counts: {}, reasons: { update: {} } };
+let previewData = { actions: { create: [], update: [], delete: [] }, reasons: { update: {} } };
 
 // ------------- tooltip utils -------------
 function disposeTooltips() {
@@ -68,9 +81,10 @@ function renderMappingTables() {
   if (!autoBody || !ovBody) return;
 
   autoBody.innerHTML = mappingData.auto.map(r => {
-    const unmatched = !r.wc_product_id || (r.status && r.status !== 'matched');
+    // Highlight only rows with a status other than "matched"
+    const highlight = r.status && r.status !== 'matched';
     return `
-      <tr class="${unmatched ? 'unmatched' : ''}">
+      <tr class="${highlight ? 'unmatched' : ''}">
         <td class="td-sm code">${esc(r.erp_item_code)}</td>
         <td class="td-sm sku">${esc(r.wc_sku)}</td>
         <td class="td-sm">${esc(r.wc_product_id)}</td>
@@ -141,7 +155,6 @@ async function saveMapping(newData) {
   await loadMapping();
 }
 
-// internal names to avoid stack recursion
 async function doRunPreview(btn) {
   const b = btn || $("#btn-refresh-preview");
   try {
@@ -150,11 +163,6 @@ async function doRunPreview(btn) {
     const { data } = await axios.post("/admin/api/preview-sync");
     previewData = data;
     renderPreviewTable();
-    if (data.pricelist_used) {
-      showAlert("info", `Preview refreshed (Price list: ${esc(data.pricelist_used)})`);
-    } else {
-      showAlert("info", "Preview refreshed");
-    }
   } catch (e) {
     console.error(e);
     showAlert("danger", "Failed to run preview");
@@ -165,26 +173,48 @@ async function doRunPreview(btn) {
 }
 
 function formatErrors(errs) {
-  const lines = Object.entries(errs).map(([code, msg]) => `<div><b>${esc(code)}</b>: ${esc(msg)}</div>`);
-  return lines.join("");
+  return Object.entries(errs)
+    .map(([code, msg]) => `<div><b>${esc(code)}</b>: ${esc(msg)}</div>`)
+    .join("");
 }
 
 async function doBulk(action, btn) {
   const b = btn || document.getElementById(`btn-${action}`);
   try {
+    // clear any existing manual-delete callout
+    const area = $("#manual-delete-callout-area");
+    if (area) area.innerHTML = "";
+
     disableBtn(b, "Working…");
     showLoader(`Running ${action}…`);
     const { data } = await axios.post(`/admin/api/sync/${action}`);
     const ok = data.created || data.updated || data.deleted || [];
     const failed = data.failed || [];
     const errs = data.errors || {};
+    const manual = data.manual_delete || [];
 
     if (failed.length) {
       console.error("Failed items:", errs);
       showAlert("warning",
-        `${action.toUpperCase()}: OK=${ok.length} Failed=${failed.length}<br>${formatErrors(errs)}`);
+        `${action.toUpperCase()}: OK=${ok.length} Failed=${failed.length}<br>${formatErrors(errs)}`
+      );
     } else {
       showAlert("success", `${action.toUpperCase()}: OK=${ok.length}`);
+    }
+
+    // If Create returned ghost‐SKUs, show persistent callout + button
+    if (action === "create" && manual.length) {
+      const list = manual.map(sku => `<li>${esc(sku)}</li>`).join("");
+      showCallout("danger", `
+        <strong>Manual deletion required for these SKUs:</strong>
+        <ul>${list}</ul>
+        <p>Please delete these “ghost” SKUs in WooCommerce (Products → Trash → Permanently Delete), then retry “Create”.</p>
+        <div class="mt-2">
+          <button onclick="doEmptyTrash(this)" class="btn btn-sm btn-outline-danger">
+            🗑️ Empty Woo Trash
+          </button>
+        </div>
+      `);
     }
 
     await Promise.all([loadMapping(), doRunPreview()]);
@@ -196,6 +226,24 @@ async function doBulk(action, btn) {
     hideLoader();
   }
 }
+
+// ------------- Empty trash helper -------------
+async function doEmptyTrash(btn) {
+  const area = $("#manual-delete-callout-area");
+  disableBtn(btn, "Emptying…");
+  showLoader("Emptying trash…");
+  try {
+    const { data } = await axios.post("/admin/api/empty-trash");
+    showAlert("success", `Emptied trash: ${data.removed.length} products permanently deleted.`);
+  } catch (e) {
+    console.error(e);
+    showAlert("danger", "Failed to empty WooCommerce trash.");
+  } finally {
+    hideLoader();
+    if (area) area.innerHTML = "";
+  }
+}
+window.doEmptyTrash = doEmptyTrash;
 
 // ------------- overrides editing -------------
 function addOverrideRow() {
@@ -216,9 +264,8 @@ async function saveOverrides() {
       note: noteEl.value.trim() || undefined,
     };
   });
-  const payload = { auto: mappingData.auto, overrides };
   try {
-    await saveMapping(payload);
+    await saveMapping({ auto: mappingData.auto, overrides });
     showAlert("success", "Overrides saved");
   } catch (e) {
     console.error(e);
